@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { HeroVisual } from "@/components/hero-visual";
+import { InteractiveGrid } from "@/components/interactive-grid";
 
 export function Hero() {
   return (
     <section className="min-h-[100dvh] pt-24">
-      <div className="grid lg:min-h-[calc(100dvh-6rem)] lg:grid-cols-[1.02fr_.98fr]">
-        <div className="flex items-center justify-center px-6 pb-2 pt-10 sm:px-10 sm:pb-4 sm:pt-12 lg:px-12 lg:py-14">
-          <div className="reveal mx-auto max-w-[760px] text-center">
+      <div className="relative isolate grid overflow-hidden lg:min-h-[calc(100dvh-6rem)] lg:grid-cols-[1.02fr_.98fr]">
+        <InteractiveGrid />
+        <div className="relative z-10 flex items-center justify-center px-6 pb-2 pt-10 sm:px-10 sm:pb-4 sm:pt-12 lg:px-12 lg:py-14">
+          <div className="reveal relative z-10 mx-auto max-w-[760px] text-center">
             <p className="eyebrow justify-center">Website untuk bisnis Indonesia</p>
             <h1 className="display hero-title">
               <span className="hero-title-line">Biar pelanggan</span>{" "}

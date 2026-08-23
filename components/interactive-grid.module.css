@@ -1,0 +1,55 @@
+.grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.lines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(23 25 24 / 0.085) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(23 25 24 / 0.085) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 2%, black 20%, black 78%, transparent 98%);
+  mask-image: linear-gradient(to bottom, transparent 2%, black 20%, black 78%, transparent 98%);
+}
+
+.lens {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 300px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgb(240 82 55 / 0.2) 0%, rgb(240 82 55 / 0.08) 45%, transparent 72%);
+  opacity: 0;
+  transform: translate3d(50%, 50%, 0) translate(-50%, -50%);
+  transition: opacity var(--duration-default) var(--ease-out);
+  will-change: transform, opacity;
+}
+
+.pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 112px;
+  height: 112px;
+  border: 1px solid rgb(240 82 55 / 0.72);
+  border-radius: 999px;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+@media (max-width: 767px) {
+  .lines { background-size: 34px 34px; opacity: 0.7; }
+  .lens { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lens,
+  .pulse { display: none; }
+  .lines { opacity: 0.45; }
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "@fontsource-variable/plus-jakarta-sans";
 import "./globals.css";
+import arunaIcon from "@/aruna.png";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { siteUrl } from "@/lib/utils";
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
   title: { default: "ARUNA - Jasa Pembuatan Website untuk UMKM", template: "%s - ARUNA" },
   description: "Website custom yang membuat bisnis kecil tampil lebih profesional, mudah dipercaya, dan siap berkembang.",
   keywords: ["jasa pembuatan website", "jasa website UMKM", "website bisnis"],
+  icons: { icon: [{ url: arunaIcon.src, type: "image/png" }] },
   openGraph: { title: "ARUNA - Website premium untuk bisnis yang sedang tumbuh", description: "Desain custom, harga jelas, dan teknologi yang berguna untuk bisnis Anda.", type: "website", locale: "id_ID" },
   robots: { index: true, follow: true },
 };

@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import arunaLogo from "@/aruna1.svg";
 import { navItems } from "@/lib/data";
 
 export function Header() {
@@ -10,7 +12,9 @@ export function Header() {
   return <header className="fixed inset-x-0 top-0 z-50 border-b border-black/15 bg-[var(--canvas)]/95 backdrop-blur-md">
     <a href="#main-content" className="fixed left-4 top-3 z-[60] -translate-y-24 bg-[var(--ink)] px-4 py-2 text-sm font-bold text-white focus:translate-y-0">Lewati ke konten utama</a>
     <div className="container flex h-[72px] items-center justify-between">
-      <Link href="/" className="font-black tracking-[-.03em]" aria-label="ARUNA, beranda">ARUNA<span className="text-[var(--accent)]">/</span></Link>
+      <Link href="/" className="flex h-full items-center" aria-label="ARUNA, beranda">
+        <Image src={arunaLogo} alt="" className="h-12 w-auto md:h-[60px]" />
+      </Link>
       <nav className="hidden items-center gap-7 md:flex" aria-label="Navigasi utama">
         {navItems.map((item) => <Link className="nav-link text-sm font-semibold text-[#4f5450]" key={item.href} href={item.href}>{item.label}</Link>)}
       </nav>

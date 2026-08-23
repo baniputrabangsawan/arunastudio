@@ -40,4 +40,5 @@ export const navItems = [
   { href: "/#proses", label: "Proses" },
   { href: "/harga", label: "Harga" },
   { href: "/#faq", label: "FAQ" },
+  { href: "/kontak", label: "Kontak" },
 ];
