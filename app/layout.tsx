@@ -2,11 +2,8 @@ import type { Metadata } from "next";
 import "@fontsource-variable/plus-jakarta-sans";
 import "./globals.css";
 import arunaIcon from "@/aruna.png";
-import { Header } from "@/components/header";
-import { Footer } from "@/components/footer";
 import { siteUrl } from "@/lib/utils";
-import { WhatsAppButton } from "@/components/whatsapp-button";
-import { ParallaxProvider } from "@/components/parallax-provider";
+import { SiteShell } from "@/components/site-shell";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -22,10 +19,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="id">
       <body suppressHydrationWarning>
-        <Header />
-        <ParallaxProvider>{children}</ParallaxProvider>
-        <WhatsAppButton />
-        <Footer />
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );

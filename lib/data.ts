@@ -12,9 +12,9 @@ export const pricing = [
 ] as const;
 
 export const projects = [
-  { slug: "rasa-nusa", name: "Rasa Nusa", category: "Kuliner", type: "Company profile & katalog", summary: "Menu mudah dilihat. Lokasi dan reservasi mudah ditemukan.", color: "#9E4936", surface: "#F7DFCB" },
-  { slug: "ruang-tumbuh", name: "Ruang Tumbuh", category: "Pendidikan", type: "Landing page & booking", summary: "Program tersusun jelas dan konsultasi bisa dijadwalkan tanpa percakapan berulang.", color: "#345348", surface: "#DDE7DE" },
-  { slug: "bengkel-selaras", name: "Bengkel Selaras", category: "Otomotif", type: "Website & booking", summary: "Pelanggan memilih layanan dan memesan jadwal servis dari satu halaman.", color: "#29343A", surface: "#D9DEE0" },
+  { slug: "elevatestudio", name: "Elevate Studio", category: "Usaha", type: "Landing Page", summary: "Elevate Studio adalah photographer yang menyediakan jasa foto untuk berbagai acara. ", color: "#9E4936", surface: "#F7DFCB" },
+  { slug: "pilah-yuk", name: "Pilah Yuk", category: "Pendidikan", type: "Landing page & booking", summary: "Program tersusun jelas dan konsultasi bisa dijadwalkan tanpa percakapan berulang.", color: "#345348", surface: "#DDE7DE" },
+  { slug: "blackyellowbarbershop", name: "Blackyellow Barbershop", category: "UMKM", type: "Website & booking", summary: "Pelanggan memilih layanan dan memesan jadwal servis dari satu halaman.", color: "#29343A", surface: "#D9DEE0" },
 ] as const;
 
 export const faqs = [

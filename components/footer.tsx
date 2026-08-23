@@ -1,14 +1,39 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { ArrowUpRight, AtSign, Github, Instagram, Linkedin, Mail, MapPin } from "lucide-react";
 import { contactDetails } from "@/lib/contact-details";
+import type { PublicSettings } from "@/lib/content-data";
+
+const fallbackSettings: PublicSettings = {
+  email: contactDetails.email || "",
+  location: contactDetails.location,
+  whatsapp: "",
+  githubUrl: contactDetails.githubUrl,
+  linkedinUrl: contactDetails.linkedinUrl,
+  instagramUrl: contactDetails.instagramUrl,
+  threadsUrl: contactDetails.threadsUrl || "",
+};
 
 export function Footer() {
-  const { email, location } = contactDetails;
+  const [settings, setSettings] = useState(fallbackSettings);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/site-settings", { signal: controller.signal })
+      .then((response) => response.ok ? response.json() as Promise<PublicSettings> : Promise.reject())
+      .then(setSettings)
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, []);
+
+  const { email, location } = settings;
   const socials = [
-    { label: "GitHub", href: contactDetails.githubUrl, Icon: Github },
-    { label: "LinkedIn", href: contactDetails.linkedinUrl, Icon: Linkedin },
-    { label: "Instagram", href: contactDetails.instagramUrl, Icon: Instagram },
-    { label: "Threads", href: contactDetails.threadsUrl, Icon: AtSign },
+    { label: "GitHub", href: settings.githubUrl, Icon: Github },
+    { label: "LinkedIn", href: settings.linkedinUrl, Icon: Linkedin },
+    { label: "Instagram", href: settings.instagramUrl, Icon: Instagram },
+    { label: "Threads", href: settings.threadsUrl, Icon: AtSign },
   ];
 
   return (

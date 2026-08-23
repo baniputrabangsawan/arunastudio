@@ -1,7 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Check, Code2, Gauge, Handshake, Search, Smartphone, Sparkles } from "lucide-react";
-import { faqs, pricing, projects, services } from "@/lib/data";
+import type { PublicFaq, PublicPricingPlan, PublicService } from "@/lib/content-data";
+import type { PortfolioProject } from "@/lib/portfolio-data";
+import { PortfolioImage } from "./portfolio-image";
 import { SectionHeading } from "./section-heading";
 
 export function TrustStrip() {
@@ -15,7 +16,7 @@ export function TrustStrip() {
   );
 }
 
-export function ServicesSection() {
+export function ServicesSection({ services }: { services: PublicService[] }) {
   return (
     <section className="section" id="layanan">
       <div className="container">
@@ -69,25 +70,20 @@ export function WhySection() {
   );
 }
 
-const projectImages = [
-  "/images/project-rasa-nusa.webp",
-  "/images/aruna-hero-business-owner.webp",
-  "/images/project-bengkel-selaras.webp",
-];
-
-export function PortfolioSection() {
+export function PortfolioSection({ projects }: { projects: PortfolioProject[] }) {
+  const featuredProjects = projects.slice(0, 3);
   return (
     <section className="section" id="portfolio">
       <div className="container">
-        <div className="eyebrow">Contoh arah desain</div>
-        <SectionHeading light eyebrow="Portfolio" title="Tiga bisnis. Tiga cara bicara." description="Semua nama di bawah adalah konsep demonstrasi, bukan klien. Tujuannya memperlihatkan rentang kerja ARUNA." />
+        <div className="eyebrow">Project terpilih</div>
+        <SectionHeading light eyebrow="Portfolio" title="Bisnis berbeda. Cara bicara berbeda." description="Setiap tampilan disusun untuk membantu pelanggan memahami bisnis dan mengambil tindakan yang tepat." />
         <div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, index) => (
+          {featuredProjects.map((project) => (
             <Link href={`/portfolio/${project.slug}`} className="group h-full" key={project.slug}>
               <article className="flex h-full flex-col">
                 <div className="relative aspect-[4/3] overflow-hidden border border-black/20" data-parallax-viewport>
                   <div className="parallax-media-layer" data-parallax="media">
-                    <Image src={projectImages[index]} alt={`Konsep website ${project.name}`} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
+                    <PortfolioImage src={project.imageUrl} alt={project.imageAlt} sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
                   </div>
                 </div>
                 <div className="flex flex-1 flex-col border-x border-b border-black/20 bg-[var(--paper)] p-6 md:p-7">
@@ -138,7 +134,7 @@ export function ProcessSection() {
   );
 }
 
-export function PricingSection() {
+export function PricingSection({ pricing }: { pricing: PublicPricingPlan[] }) {
   return (
     <section className="section" id="harga">
       <div className="container">
@@ -179,7 +175,7 @@ export function PricingSection() {
   );
 }
 
-export function FaqSection() {
+export function FaqSection({ faqs }: { faqs: PublicFaq[] }) {
   return (
     <section className="section bg-[var(--surface)]" id="faq">
       <div className="container grid gap-14 lg:grid-cols-[.7fr_1.3fr]">
@@ -189,7 +185,7 @@ export function FaqSection() {
           <p className="subheading mt-6">Belum terjawab? <Link className="text-link" href="/kontak">Hubungi ARUNA</Link>.</p>
         </div>
         <div>
-          {faqs.map(([question, answer]) => (
+          {faqs.map(({ question, answer }) => (
             <details key={question} className="group border-b border-black/25 py-1">
               <summary className="flex min-h-20 cursor-pointer list-none items-center justify-between gap-5 py-5 text-lg font-bold">
                 <span>{question}</span><span className="text-2xl font-light text-[var(--accent)] transition-transform duration-200 group-open:rotate-45">+</span>

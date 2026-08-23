@@ -64,9 +64,12 @@ model Portfolio {
   slug        String           @unique
   name        String
   category    String
+  type        String           @default("Website")
   description String
   problem     String
   solution    String
+  focus       String[]         @default([])
+  isDemo      Boolean          @default(false)
   published   Boolean          @default(false)
   order       Int              @default(0)
   media       PortfolioMedia[]
@@ -90,6 +93,7 @@ model Service {
   title       String
   group       String
   description String
+  items       String[] @default([])
   published   Boolean @default(true)
   order       Int     @default(0)
 }
@@ -102,6 +106,8 @@ model PricingPlan {
   priceMax    Int?
   description String
   featured    Boolean          @default(false)
+  published   Boolean          @default(true)
+  order       Int              @default(0)
   features    PricingFeature[]
 }
 
@@ -137,6 +143,7 @@ model BlogPost {
   excerpt     String
   content     String
   coverUrl    String?
+  order       Int          @default(0)
   publishedAt DateTime?
   categoryId  String
   category    BlogCategory @relation(fields: [categoryId], references: [id])

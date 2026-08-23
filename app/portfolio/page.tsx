@@ -1,23 +1,24 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { projects } from "@/lib/data";
+import { getPublishedProjects } from "@/lib/portfolio-data";
 import { PageHero } from "@/components/page-hero";
+import { PortfolioImage } from "@/components/portfolio-image";
 
 export const metadata: Metadata = { title: "Portfolio", description: "Eksplorasi konsep dan karya website ARUNA." };
-const images = ["/images/project-rasa-nusa.webp", "/images/aruna-hero-business-owner.webp", "/images/project-bengkel-selaras.webp"];
+export const dynamic = "force-dynamic";
 
-export default function PortfolioPage() {
+export default async function PortfolioPage() {
+  const projects = await getPublishedProjects();
   return <main>
-    <PageHero eyebrow="Portfolio" title="Satu gaya tidak cocok untuk semua bisnis." description="Koleksi awal ini berupa konsep demonstrasi. Setiap arah dibuat untuk bisnis yang berbeda." />
+    <PageHero eyebrow="Portfolio" title="Satu gaya tidak cocok untuk semua bisnis." description="Setiap project dirancang mengikuti karakter bisnis, kebutuhan pelanggan, dan tujuan yang ingin dicapai." />
     <section className="section">
       <div className="container grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project, index) => <Link href={`/portfolio/${project.slug}`} key={project.slug} className="group h-full">
+        {projects.map((project) => <Link href={`/portfolio/${project.slug}`} key={project.slug} className="group h-full">
           <article className="flex h-full flex-col">
             <div className="relative aspect-[4/3] overflow-hidden border border-black/20" data-parallax-viewport>
               <div className="parallax-media-layer" data-parallax="media">
-                <Image src={images[index]} alt={`Konsep website ${project.name}`} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
+                <PortfolioImage src={project.imageUrl} alt={project.imageAlt} sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
               </div>
             </div>
             <div className="flex flex-1 flex-col border-x border-b border-black/20 bg-[var(--paper)] p-6 md:p-7">

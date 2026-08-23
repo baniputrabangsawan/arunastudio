@@ -3,18 +3,19 @@ import Link from "next/link";
 import { AtSign, Github, Instagram, Linkedin, Mail, MapPin, MessageCircle } from "lucide-react";
 import { PageHero } from "@/components/page-hero";
 import { ContactForm } from "@/components/contact-form";
-import { contactDetails } from "@/lib/contact-details";
+import { getPublicSettings } from "@/lib/content-data";
 
 export const metadata: Metadata = { title: "Kontak", description: "Hubungi ARUNA untuk konsultasi website bisnis." };
+export const dynamic = "force-dynamic";
 
-export default function ContactPage() {
-  const { email, location } = contactDetails;
-  const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+export default async function ContactPage() {
+  const settings = await getPublicSettings();
+  const { email, location, whatsapp } = settings;
   const socials = [
-    { label: "GitHub", href: contactDetails.githubUrl, Icon: Github },
-    { label: "LinkedIn", href: contactDetails.linkedinUrl, Icon: Linkedin },
-    { label: "Instagram", href: contactDetails.instagramUrl, Icon: Instagram },
-    { label: "Threads", href: contactDetails.threadsUrl, Icon: AtSign },
+    { label: "GitHub", href: settings.githubUrl, Icon: Github },
+    { label: "LinkedIn", href: settings.linkedinUrl, Icon: Linkedin },
+    { label: "Instagram", href: settings.instagramUrl, Icon: Instagram },
+    { label: "Threads", href: settings.threadsUrl, Icon: AtSign },
   ];
 
   return (

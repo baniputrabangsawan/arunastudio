@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "db:push": "prisma db push",
+    "db:seed:portfolio": "node --env-file=.env prisma/seed-portfolio.mjs",
+    "db:seed:content": "node --env-file=.env prisma/seed-content.mjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {
