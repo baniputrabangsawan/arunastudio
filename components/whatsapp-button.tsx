@@ -1,0 +1,2 @@
+import { MessageCircle } from "lucide-react";
+export function WhatsAppButton(){const number=process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;if(!number)return null;return <a href={`https://wa.me/${number}`} aria-label="Chat ARUNA melalui WhatsApp" className="fixed bottom-5 right-5 z-40 grid size-14 place-items-center rounded-full bg-[#345348] text-white shadow-xl transition-transform duration-150 hover:-translate-y-1"><MessageCircle/></a>}

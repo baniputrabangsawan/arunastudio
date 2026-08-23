@@ -1,0 +1,76 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+.decoration {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 0;
+  width: min(28vw, 420px);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.slow,
+.fast {
+  position: absolute;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.slow {
+  top: 6%;
+  right: 18%;
+  width: 12px;
+  height: 72%;
+}
+
+.fast {
+  right: 3%;
+  bottom: 2%;
+  width: 7px;
+  height: 48%;
+}
+
+.slow::before,
+.fast::before {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  content: "";
+  transform: rotate(14deg);
+  transform-origin: center;
+}
+
+.slow::before {
+  background: color-mix(in srgb, var(--accent) 72%, transparent);
+}
+
+.fast::before {
+  border: 1px solid color-mix(in srgb, var(--ink) 26%, transparent);
+}
+
+@media (max-width: 767px) {
+  .decoration {
+    width: 22vw;
+    opacity: .42;
+  }
+
+  .slow {
+    right: 26%;
+    width: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slow,
+  .fast {
+    transform: none !important;
+  }
+}

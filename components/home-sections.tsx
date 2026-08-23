@@ -1,0 +1,204 @@
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, ArrowUpRight, Check, Code2, Gauge, Handshake, Search, Smartphone, Sparkles } from "lucide-react";
+import { faqs, pricing, projects, services } from "@/lib/data";
+import { SectionHeading } from "./section-heading";
+
+export function TrustStrip() {
+  return (
+    <section className="border-y border-black/15 bg-[var(--surface)] py-7 text-[var(--ink)]">
+      <div className="container grid gap-3 md:grid-cols-[.75fr_1.25fr] md:items-center">
+        <p className="m-0 text-lg font-bold">Kecil bisnisnya. Serius tampilannya.</p>
+        <p className="m-0 max-w-3xl text-sm text-[var(--muted)]">Belum ada logo klien yang ditampilkan. Portfolio dan harga menjadi bukti yang bisa Anda periksa sendiri.</p>
+      </div>
+    </section>
+  );
+}
+
+export function ServicesSection() {
+  return (
+    <section className="section" id="layanan">
+      <div className="container">
+        <SectionHeading eyebrow="Layanan" title="Pilih yang memang dibutuhkan bisnis Anda." description="Mulai dari satu halaman sampai sistem booking. Scope ditentukan setelah tujuan bisnisnya jelas." />
+        <div className="mt-16 grid gap-4 md:grid-cols-2 lg:grid-cols-12">
+          {services.map((service, index) => (
+            <Link
+              href={`/layanan/${service.slug}`}
+              key={service.slug}
+              className={`group flex min-h-72 flex-col border border-black/20 p-7 md:p-9 ${index === 0 ? "bg-[var(--accent)] lg:col-span-7" : index === 1 ? "bg-[#d9dad6] lg:col-span-5" : index === 2 ? "bg-[var(--ink)] text-[#f1f1ed] lg:col-span-5" : "bg-[var(--paper)] lg:col-span-7"}`}
+            >
+              <p className={`m-0 text-xs font-bold uppercase tracking-[.12em] ${index === 2 ? "text-white/60" : "text-black/55"}`}>{service.group}</p>
+              <h3 className="mt-auto max-w-md text-3xl font-bold tracking-[-.04em] md:text-4xl">{service.title}</h3>
+              <div className="mt-5 flex items-end justify-between gap-5">
+                <p className={`m-0 max-w-md ${index === 2 ? "text-white/65" : "text-black/65"}`}>{service.description}</p>
+                <ArrowUpRight className="shrink-0 transition-transform duration-200 group-hover:-translate-y-1 group-hover:translate-x-1" aria-hidden="true" />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const reasons = [
+  [Sparkles, "Dibuat dari nol", "Tampilan mengikuti bisnis Anda, bukan template yang diganti warna."],
+  [Smartphone, "Enak dibuka di HP", "Pelanggan bisa membaca dan menghubungi Anda tanpa mencubit layar."],
+  [Gauge, "Cepat saat dibuka", "Halaman ringan membuat pelanggan tidak keburu pergi."],
+  [Search, "Siap ditemukan", "Struktur dasar SEO disiapkan sejak awal."],
+  [Handshake, "Bahasanya jelas", "Biaya, scope, dan progres tidak dibungkus istilah teknis."],
+  [Code2, "Bisa ditambah nanti", "Website tidak perlu dibangun ulang saat bisnis berkembang."],
+] as const;
+
+export function WhySection() {
+  return (
+    <section className="section bg-[var(--surface)]">
+      <div className="container">
+        <SectionHeading eyebrow="Cara kami bekerja" title="Yang Anda bayar harus terasa gunanya." description="Desain bagus membantu pelanggan memahami bisnis dan mengambil tindakan. Sisanya harus punya alasan yang jelas." />
+        <div className="mt-16 grid gap-px bg-black/20 md:grid-cols-2 lg:grid-cols-12">
+          {reasons.map(([Icon, title, description], index) => (
+            <article key={title} className={`bg-[var(--canvas)] p-7 md:p-9 ${[0, 3, 4].includes(index) ? "lg:col-span-5" : "lg:col-span-7"}`}>
+              <Icon size={26} strokeWidth={1.7} className="text-[var(--accent)]" aria-hidden="true" />
+              <h3 className="mt-14 text-2xl font-bold tracking-[-.035em]">{title}</h3>
+              <p className="mb-0 mt-3 max-w-lg text-[var(--muted)]">{description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const projectImages = [
+  "/images/project-rasa-nusa.webp",
+  "/images/aruna-hero-business-owner.webp",
+  "/images/project-bengkel-selaras.webp",
+];
+
+export function PortfolioSection() {
+  return (
+    <section className="section" id="portfolio">
+      <div className="container">
+        <div className="eyebrow">Contoh arah desain</div>
+        <SectionHeading light eyebrow="Portfolio" title="Tiga bisnis. Tiga cara bicara." description="Semua nama di bawah adalah konsep demonstrasi, bukan klien. Tujuannya memperlihatkan rentang kerja ARUNA." />
+        <div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {projects.map((project, index) => (
+            <Link href={`/portfolio/${project.slug}`} className="group h-full" key={project.slug}>
+              <article className="flex h-full flex-col">
+                <div className="relative aspect-[4/3] overflow-hidden border border-black/20" data-parallax-viewport>
+                  <div className="parallax-media-layer" data-parallax="media">
+                    <Image src={projectImages[index]} alt={`Konsep website ${project.name}`} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
+                  </div>
+                </div>
+                <div className="flex flex-1 flex-col border-x border-b border-black/20 bg-[var(--paper)] p-6 md:p-7">
+                  <p className="m-0 text-xs font-bold uppercase tracking-[.12em] text-[var(--muted)]">{project.category}</p>
+                  <div className="mt-8">
+                    <h3 className="text-3xl font-bold tracking-[-.045em]">{project.name}</h3>
+                    <p className="mb-0 mt-3 text-[var(--muted)]">{project.summary}</p>
+                  </div>
+                  <div className="mt-auto flex items-end justify-between gap-5 border-t border-black/15 pt-6">
+                    <div>
+                      <p className="m-0 text-[10px] font-bold uppercase tracking-[.12em] text-[var(--muted)]">Jenis project</p>
+                      <p className="mb-0 mt-2 font-bold">{project.type}</p>
+                    </div>
+                    <ArrowUpRight className="shrink-0 transition-transform duration-200 group-hover:-translate-y-1 group-hover:translate-x-1" aria-hidden="true" />
+                  </div>
+                </div>
+              </article>
+            </Link>
+          ))}
+        </div>
+        <Link className="button secondary mt-9" href="/portfolio">Lihat Portfolio <ArrowRight size={18} aria-hidden="true" /></Link>
+      </div>
+    </section>
+  );
+}
+
+export function ProcessSection() {
+  const steps = [
+    ["Ceritakan bisnis", "Kirim brief singkat. Tidak harus memakai istilah teknis."],
+    ["Tentukan scope", "Halaman, fitur, biaya, dan jadwal ditulis sebelum pekerjaan dimulai."],
+    ["Lihat progres", "Desain dan development ditinjau pada titik yang sudah disepakati."],
+    ["Tayang", "Website diluncurkan, diserahkan, dan siap dirawat."],
+  ];
+  return (
+    <section className="section bg-[var(--paper)]" id="proses">
+      <div className="container">
+        <SectionHeading eyebrow="Proses" title="Anda selalu tahu apa yang sedang dikerjakan." description="Empat tahap yang singkat, dengan keputusan dan biaya yang terlihat sejak awal." />
+        <ol className="mt-16 grid gap-4 md:grid-cols-2">
+          {steps.map(([title, description], index) => (
+            <li className={`min-h-64 border border-black/20 p-7 md:p-9 ${index === 0 ? "bg-[var(--accent)]" : index === 3 ? "bg-[var(--ink)] text-[#f1f1ed]" : "bg-[var(--canvas)]"}`} key={title}>
+              <h3 className="max-w-sm text-3xl font-bold tracking-[-.04em]">{title}</h3>
+              <p className={`mb-0 mt-8 max-w-md ${index === 3 ? "text-white/65" : "text-black/65"}`}>{description}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+export function PricingSection() {
+  return (
+    <section className="section" id="harga">
+      <div className="container">
+        <SectionHeading eyebrow="Harga" title="Angkanya terlihat sebelum kita bicara." description="Pilih paket terdekat. Penawaran final mengikuti fitur dan jumlah halaman yang disepakati." />
+        <div className="mt-16 grid gap-4 lg:grid-cols-3 lg:items-stretch">
+          {pricing.map((plan, index) => (
+            <article
+              className={`flex min-h-[540px] flex-col border p-7 md:p-8 ${plan.featured ? "border-[var(--ink)] bg-[var(--accent)]" : "border-black/20 bg-[var(--paper)]"}`}
+              key={plan.name}
+            >
+              <div className="flex min-h-8 items-start justify-between gap-4">
+                <span className="text-xs font-bold uppercase tracking-[.12em] text-black/55">0{index + 1}</span>
+                {plan.featured && <span className="border border-[var(--ink)] bg-[var(--ink)] px-3 py-1 text-[10px] font-black uppercase tracking-[.1em] text-[var(--paper)]">Direkomendasikan</span>}
+              </div>
+
+              <div className="mt-10">
+                <h3 className="text-3xl font-bold tracking-[-.045em] md:text-4xl">{plan.name}</h3>
+                <p className="mt-5 text-2xl font-black tracking-[-.025em]">{plan.price}</p>
+                <p className="mt-5 max-w-sm text-black/65">{plan.note}</p>
+              </div>
+
+              <ul className="my-8 grid gap-4 border-t border-black/20 pt-7">
+                {plan.features.map((feature) => <li className="flex items-center gap-3 font-semibold" key={feature}><Check size={17} strokeWidth={2.4} aria-hidden="true" />{feature}</li>)}
+              </ul>
+
+              <Link
+                className={`${plan.featured ? "button light" : "button secondary"} mt-auto w-full`}
+                href="/mulai-project"
+              >
+                Pilih {plan.name}
+              </Link>
+            </article>
+          ))}
+        </div>
+        <p className="mt-6 text-sm text-[var(--muted)]">Harga di atas adalah estimasi awal, bukan biaya tersembunyi.</p>
+      </div>
+    </section>
+  );
+}
+
+export function FaqSection() {
+  return (
+    <section className="section bg-[var(--surface)]" id="faq">
+      <div className="container grid gap-14 lg:grid-cols-[.7fr_1.3fr]">
+        <div>
+          <p className="eyebrow">Pertanyaan umum</p>
+          <h2 className="heading">Jawaban sebelum mulai.</h2>
+          <p className="subheading mt-6">Belum terjawab? <Link className="text-link" href="/kontak">Hubungi ARUNA</Link>.</p>
+        </div>
+        <div>
+          {faqs.map(([question, answer]) => (
+            <details key={question} className="group border-b border-black/25 py-1">
+              <summary className="flex min-h-20 cursor-pointer list-none items-center justify-between gap-5 py-5 text-lg font-bold">
+                <span>{question}</span><span className="text-2xl font-light text-[var(--accent)] transition-transform duration-200 group-open:rotate-45">+</span>
+              </summary>
+              <p className="max-w-2xl pb-7 pr-10 text-[#505551]">{answer}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
