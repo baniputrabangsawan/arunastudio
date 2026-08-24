@@ -5,7 +5,7 @@ import { PageHero } from "@/components/page-hero";
 import { PortfolioImage } from "@/components/portfolio-image";
 import { getPublishedPosts } from "@/lib/content-data";
 
-export const metadata: Metadata = { title: "Journal", description: "Panduan website, SEO, dan digitalisasi bisnis untuk UMKM." };
+export const metadata: Metadata = { title: "Journal Website UMKM", description: "Panduan praktis tentang website bisnis, SEO lokal, dan digitalisasi untuk UMKM Indonesia.", alternates: { canonical: "/blog" } };
 export default async function BlogPage() {
   const posts = await getPublishedPosts();
 

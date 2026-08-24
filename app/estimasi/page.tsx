@@ -1,4 +1,5 @@
 import { PageHero } from "@/components/page-hero";
-import { InteractiveStudio } from "@/components/interactive-studio";
-import { getPublicAvailability } from "@/lib/content-data";
-export default async function EstimatePage(){const availability=await getPublicAvailability();return <main><PageHero eyebrow="Project estimator" title="Ceritakan kebutuhan dengan bahasa sehari-hari." description="Estimator membantu menerjemahkan cerita bisnis menjadi rekomendasi website, fitur, dan kisaran investasi awal."/><InteractiveStudio initialAvailability={availability}/></main>}
+import type { Metadata } from "next";
+import { ProjectEstimator } from "@/components/interactive-studio";
+export const metadata:Metadata={title:"Estimator Project Website",description:"Ceritakan kebutuhan bisnis untuk mendapat rekomendasi paket, fitur, kompleksitas, dan estimasi harga website.",alternates:{canonical:"/estimasi"}};
+export default function EstimatePage(){return <main><PageHero eyebrow="Estimator Project" title="Ceritakan kebutuhan dengan bahasa sehari-hari." description="Dapatkan rekomendasi jenis website, fitur, kompleksitas, paket, dan kisaran investasi awal."/><section className="section pt-0"><div className="container"><ProjectEstimator/></div></section></main>}

@@ -1,66 +1,13 @@
 "use client";
-
 import { FormEvent, useState } from "react";
-import { CheckCircle2, LoaderCircle } from "lucide-react";
-import { copyMessage, emailUrl, whatsappUrl } from "@/lib/contact-handoff";
+import { ArrowRight, CheckCircle2, LoaderCircle } from "lucide-react";
+import { whatsappUrl } from "@/lib/contact-handoff";
 
-type ContactFormProps = {
-  contactEmail: string;
-  whatsapp: string;
-};
-
-export function ContactForm({ contactEmail, whatsapp }: ContactFormProps) {
-  const [done, setDone] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setBusy(true);
-    setError("");
-
-    const form = new FormData(event.currentTarget);
-    const name = String(form.get("name") || "");
-    const email = String(form.get("email") || "");
-    const message = `Halo ARUNA, saya ${name}.\n\nEmail: ${email}\n\nPesan:\n${String(form.get("message") || "")}`;
-    const whatsappTarget = whatsappUrl(whatsapp, message);
-    const emailTarget = emailUrl(contactEmail, `Pesan website dari ${name}`, message);
-
-    try {
-      if (whatsappTarget) {
-        window.open(whatsappTarget, "_blank", "noopener,noreferrer");
-        setDone("Pesan sudah disiapkan di WhatsApp. Periksa lalu kirim dari sana.");
-      } else if (emailTarget) {
-        window.location.href = emailTarget;
-        setDone("Pesan sudah disiapkan di aplikasi email. Periksa lalu kirim dari sana.");
-      } else {
-        await copyMessage(message);
-        setDone("Pesan sudah disalin. Kirimkan melalui salah satu kanal kontak ARUNA di halaman ini.");
-      }
-    } catch {
-      setError("Pesan belum dapat disiapkan. Silakan salin isi formulir secara manual.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  if (done) return (
-    <div className="bg-white p-10 text-center" role="status">
-      <CheckCircle2 className="mx-auto text-[#345348]" size={44} />
-      <h2 className="mt-4 font-display text-3xl">Pesan siap dikirim.</h2>
-      <p className="mt-2 text-[var(--muted)]">{done}</p>
-      <button className="button secondary mt-6" type="button" onClick={() => setDone("")}>Tulis pesan lain</button>
-    </div>
-  );
-
-  return (
-    <form className="grid gap-5 bg-white p-6 md:p-9" onSubmit={submit}>
-      <label className="label">Nama<input required name="name" autoComplete="name" className="field" /></label>
-      <label className="label">Email<input required name="email" autoComplete="email" type="email" className="field" /></label>
-      <label className="label">Pesan<textarea required name="message" minLength={10} className="field min-h-40 resize-y" /></label>
-      {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
-      <button className="button" disabled={busy}>{busy && <LoaderCircle className="animate-spin" size={17} />}Siapkan Pesan</button>
-      <p className="m-0 text-xs text-[var(--muted)]">Pesan diteruskan melalui WhatsApp atau aplikasi email; website ini tidak menyimpan data formulir.</p>
-    </form>
-  );
+export function ContactForm({ contactWhatsapp }: { contactWhatsapp: string }) {
+  const [state, setState] = useState({ name:"", business:"", whatsapp:"", email:"", need:"Landing Page", message:"", website:"" });
+  const [busy,setBusy]=useState(false); const [error,setError]=useState(""); const [id,setId]=useState("");
+  const summary = `Halo ARUNA, saya ${state.name} dari ${state.business}. Kebutuhan: ${state.need}. ${state.message}`;
+  async function submit(event:FormEvent){event.preventDefault();setBusy(true);setError("");try{const response=await fetch("/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...state,kind:"contact",source:"contact_page"})});const result=await response.json();if(!response.ok)throw new Error(result.error);setId(result.submissionId);}catch(err){setError(`${err instanceof Error?err.message:"Form belum dapat dikirim."} Gunakan WhatsApp sebagai alternatif.`);}finally{setBusy(false)}}
+  if(id)return <div className="border border-black/20 bg-[var(--paper)] p-8 text-center" role="status"><CheckCircle2 className="mx-auto text-[var(--success)]" size={48}/><h2 className="mt-5 text-3xl font-black">Pesan tersimpan.</h2><p className="mt-3">ID submission: <strong>{id}</strong></p>{contactWhatsapp&&<a className="button mt-6" href={whatsappUrl(contactWhatsapp,`${summary}\nID submission: ${id}`)} target="_blank" rel="noreferrer">Lanjutkan di WhatsApp <ArrowRight size={17}/></a>}</div>;
+  return <form onSubmit={submit} className="grid gap-5 border border-black/20 bg-[var(--paper)] p-6 md:grid-cols-2 md:p-10"><label className="label">Nama<input required className="field" value={state.name} onChange={e=>setState({...state,name:e.target.value})}/></label><label className="label">Nama bisnis<input required className="field" value={state.business} onChange={e=>setState({...state,business:e.target.value})}/></label><label className="label">WhatsApp<input required className="field" type="tel" value={state.whatsapp} onChange={e=>setState({...state,whatsapp:e.target.value})}/></label><label className="label">Email<input required className="field" type="email" value={state.email} onChange={e=>setState({...state,email:e.target.value})}/></label><label className="label md:col-span-2">Jenis kebutuhan<select className="field" value={state.need} onChange={e=>setState({...state,need:e.target.value})}>{["Landing Page","Company Profile","Custom Website","Perbaikan Website","Belum yakin"].map(x=><option key={x}>{x}</option>)}</select></label><label className="label md:col-span-2">Pesan<textarea required className="field min-h-36 resize-y" value={state.message} onChange={e=>setState({...state,message:e.target.value})}/></label><label className="hidden" aria-hidden="true">Website<input tabIndex={-1} autoComplete="off" value={state.website} onChange={e=>setState({...state,website:e.target.value})}/></label>{error&&<div className="md:col-span-2"><p role="alert" className="border-l-2 border-red-600 bg-red-50 p-3 text-sm text-red-800">{error}</p>{contactWhatsapp&&<a className="text-link mt-3" href={whatsappUrl(contactWhatsapp,summary)} target="_blank" rel="noreferrer">Kirim lewat WhatsApp <ArrowRight size={16}/></a>}</div>}<button className="button md:col-span-2 md:justify-self-start" disabled={busy}>{busy&&<LoaderCircle className="animate-spin" size={17}/>}Kirim kebutuhan</button></form>;
 }

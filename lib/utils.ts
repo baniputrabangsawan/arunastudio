@@ -3,6 +3,6 @@ export function rupiah(value: number) {
 }
 
 export function siteUrl(path = "") {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://arunastudio.vercel.app";
   return `${base.replace(/\/$/, "")}${path}`;
 }

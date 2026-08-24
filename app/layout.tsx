@@ -13,14 +13,17 @@ export const metadata: Metadata = {
   title: { default: "ARUNA - Jasa Pembuatan Website untuk UMKM", template: "%s - ARUNA" },
   description: "Website custom yang membuat bisnis kecil tampil lebih profesional, mudah dipercaya, dan siap berkembang.",
   keywords: ["jasa pembuatan website", "jasa website UMKM", "website bisnis"],
+  alternates: { canonical: "/" },
   icons: { icon: [{ url: arunaLogo.src, type: "image/svg+xml" }] },
-  openGraph: { title: "ARUNA - Website premium untuk bisnis yang sedang tumbuh", description: "Desain custom, harga jelas, dan teknologi yang berguna untuk bisnis Anda.", type: "website", locale: "id_ID" },
+  openGraph: { title: "ARUNA - Jasa Website untuk UMKM Indonesia", description: "Website custom yang rapi, cepat, dan membantu pelanggan memilih bisnis Anda.", type: "website", locale: "id_ID", url: "/", siteName: "ARUNA" },
+  twitter: { card: "summary_large_image", title: "ARUNA - Jasa Website untuk UMKM Indonesia", description: "Website custom yang rapi, cepat, dan membantu pelanggan memilih bisnis Anda." },
+  category: "technology",
   robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id">
+    <html lang="id-ID">
       <body suppressHydrationWarning>
         <SiteShell header={<Header />} footer={<Footer />} whatsapp={<WhatsAppButton />}>
           {children}

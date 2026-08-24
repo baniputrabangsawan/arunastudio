@@ -5,7 +5,7 @@ import { getPublishedProjects } from "@/lib/portfolio-data";
 import { PageHero } from "@/components/page-hero";
 import { PortfolioImage } from "@/components/portfolio-image";
 
-export const metadata: Metadata = { title: "Portfolio", description: "Eksplorasi konsep dan karya website ARUNA." };
+export const metadata: Metadata = { title: "Portfolio Website UMKM", description: "Lihat concept project dan client project ARUNA untuk restoran, bengkel, dan bisnis lokal Indonesia.", alternates: { canonical: "/portfolio" } };
 export default async function PortfolioPage() {
   const projects = await getPublishedProjects();
   return <main>
@@ -20,7 +20,7 @@ export default async function PortfolioPage() {
               </div>
             </div>
             <div className="flex flex-1 flex-col border-x border-b border-black/20 bg-[var(--paper)] p-6 md:p-7">
-              <p className="m-0 text-xs font-bold uppercase tracking-[.12em] text-[var(--muted)]">{project.category}</p>
+              <div className="flex flex-wrap items-center justify-between gap-3"><p className="m-0 text-xs font-bold uppercase tracking-[.12em] text-[var(--muted)]">{project.category}</p><span className="border border-black/20 px-2 py-1 text-[10px] font-black uppercase tracking-[.1em]">{project.status === "concept" ? "Concept Project" : "Client Project"}</span></div>
               <div className="mt-8">
                 <h2 className="text-3xl font-bold tracking-[-.045em]">{project.name}</h2>
                 <p className="mt-3 text-[var(--muted)]">{project.summary}</p>
@@ -30,12 +30,13 @@ export default async function PortfolioPage() {
                   <p className="m-0 text-[10px] font-bold uppercase tracking-[.12em] text-[var(--muted)]">Jenis project</p>
                   <p className="mb-0 mt-2 font-bold">{project.type}</p>
                 </div>
-                <ArrowUpRight className="shrink-0 transition-transform duration-200 group-hover:-translate-y-1 group-hover:translate-x-1" aria-hidden="true" />
+                <span className="flex items-center gap-2 text-sm font-bold">Lihat Case Study <ArrowUpRight className="shrink-0 transition-transform duration-200 group-hover:-translate-y-1 group-hover:translate-x-1" size={17} aria-hidden="true" /></span>
               </div>
             </div>
           </article>
         </Link>)}
       </div>
+      <div className="container mt-14 border-t border-black/20 pt-8"><p className="text-xl font-bold">Bisnis Anda bisa menjadi project berikutnya.</p><Link className="button mt-4" href="/mulai-project">Mulai Project</Link></div>
     </section>
   </main>;
 }

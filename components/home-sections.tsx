@@ -2,15 +2,16 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Check, Code2, Gauge, Handshake, Search, Smartphone, Sparkles } from "lucide-react";
 import type { PublicFaq, PublicPricingPlan, PublicService } from "@/lib/content-data";
 import type { PortfolioProject } from "@/lib/portfolio-data";
+import { FaqAccordion } from "./faq-accordion";
 import { PortfolioImage } from "./portfolio-image";
 import { SectionHeading } from "./section-heading";
 
 export function TrustStrip() {
+  const indicators = ["Desain Custom", "Mobile-first", "Harga Transparan", "SEO-ready", "Support Setelah Launch"];
   return (
-    <section className="border-y border-black/15 bg-[var(--surface)] py-7 text-[var(--ink)]">
-      <div className="container grid gap-3 md:grid-cols-[.75fr_1.25fr] md:items-center">
-        <p className="m-0 text-lg font-bold">Kecil bisnisnya. Serius tampilannya.</p>
-        <p className="m-0 max-w-3xl text-sm text-[var(--muted)]">Belum ada logo klien yang ditampilkan. Portfolio dan harga menjadi bukti yang bisa Anda periksa sendiri.</p>
+    <section className="border-y border-black/15 bg-[var(--surface)] py-7 text-[var(--ink)]" aria-label="Standar setiap project ARUNA">
+      <div className="container flex flex-wrap items-center justify-between gap-x-7 gap-y-3">
+        {indicators.map((indicator) => <p className="m-0 flex items-center gap-2 text-sm font-bold" key={indicator}><Check size={16} className="text-[var(--accent-dark)]" aria-hidden="true" />{indicator}</p>)}
       </div>
     </section>
   );
@@ -87,7 +88,7 @@ export function PortfolioSection({ projects }: { projects: PortfolioProject[] })
                   </div>
                 </div>
                 <div className="flex flex-1 flex-col border-x border-b border-black/20 bg-[var(--paper)] p-6 md:p-7">
-                  <p className="m-0 text-xs font-bold uppercase tracking-[.12em] text-[var(--muted)]">{project.category}</p>
+                  <div className="flex flex-wrap items-center justify-between gap-3"><p className="m-0 text-xs font-bold uppercase tracking-[.12em] text-[var(--muted)]">{project.category}</p><span className="border border-black/20 px-2 py-1 text-[10px] font-black uppercase tracking-[.1em]">{project.status === "concept" ? "Concept Project" : "Client Project"}</span></div>
                   <div className="mt-8">
                     <h3 className="text-3xl font-bold tracking-[-.045em]">{project.name}</h3>
                     <p className="mb-0 mt-3 text-[var(--muted)]">{project.summary}</p>
@@ -97,14 +98,14 @@ export function PortfolioSection({ projects }: { projects: PortfolioProject[] })
                       <p className="m-0 text-[10px] font-bold uppercase tracking-[.12em] text-[var(--muted)]">Jenis project</p>
                       <p className="mb-0 mt-2 font-bold">{project.type}</p>
                     </div>
-                    <ArrowUpRight className="shrink-0 transition-transform duration-200 group-hover:-translate-y-1 group-hover:translate-x-1" aria-hidden="true" />
+                    <span className="flex items-center gap-2 text-sm font-bold">Lihat Case Study <ArrowUpRight className="shrink-0 transition-transform duration-200 group-hover:-translate-y-1 group-hover:translate-x-1" size={17} aria-hidden="true" /></span>
                   </div>
                 </div>
               </article>
             </Link>
           ))}
         </div>
-        <Link className="button secondary mt-9" href="/portfolio">Lihat Portfolio <ArrowRight size={18} aria-hidden="true" /></Link>
+        <div className="mt-9 flex flex-wrap items-center gap-5"><Link className="button secondary" href="/portfolio">Lihat Portfolio <ArrowRight size={18} aria-hidden="true" /></Link><p className="m-0 text-sm text-[var(--muted)]">Bisnis Anda bisa menjadi project berikutnya.</p></div>
       </div>
     </section>
   );
@@ -182,19 +183,25 @@ export function FaqSection({ faqs }: { faqs: PublicFaq[] }) {
         <div>
           <p className="eyebrow">Pertanyaan umum</p>
           <h2 className="heading">Jawaban sebelum mulai.</h2>
-          <p className="subheading mt-6">Belum terjawab? <Link className="text-link" href="/kontak">Hubungi ARUNA</Link>.</p>
+          <p className="subheading mt-6">Belum terjawab? <Link className="text-link" href="/mulai-project">Ceritakan project Anda</Link>.</p>
         </div>
-        <div>
-          {faqs.map(({ question, answer }) => (
-            <details key={question} className="group border-b border-black/25 py-1">
-              <summary className="flex min-h-20 cursor-pointer list-none items-center justify-between gap-5 py-5 text-lg font-bold">
-                <span>{question}</span><span className="text-2xl font-light text-[var(--accent)] transition-transform duration-200 group-open:rotate-45">+</span>
-              </summary>
-              <p className="max-w-2xl pb-7 pr-10 text-[#505551]">{answer}</p>
-            </details>
-          ))}
-        </div>
+        <FaqAccordion faqs={faqs} />
       </div>
     </section>
   );
+}
+
+export function ValueIncludedSection() {
+  const values = ["Desain yang mengikuti karakter bisnis", "Nyaman dibuka dari ponsel", "WhatsApp langsung ke percakapan", "Form kontak yang menyimpan lead", "Halaman cepat dan ringan", "Fondasi SEO dasar", "Pendampingan saat website diluncurkan"];
+  return <section className="section bg-[var(--ink)] text-[var(--paper)]"><div className="container grid gap-12 lg:grid-cols-[.8fr_1.2fr]"><div><p className="eyebrow !text-[var(--paper)]">Nilai dasar</p><h2 className="heading">Setiap Website ARUNA Sudah Termasuk</h2></div><ul className="grid gap-px bg-white/20 sm:grid-cols-2">{values.map((value) => <li className="flex min-h-24 items-center gap-3 bg-[var(--ink)] p-5 font-semibold" key={value}><Check size={18} className="shrink-0 text-[var(--accent)]" aria-hidden="true" />{value}</li>)}</ul></div></section>;
+}
+
+export function BeforeAfterSection() {
+  const before = ["Hanya mengandalkan Instagram", "Informasi tersebar", "Harga harus ditanya", "Booking dicatat manual", "Sulit ditemukan di pencarian"];
+  const after = ["Website profesional milik sendiri", "Layanan tersusun jelas", "Harga awal transparan", "WhatsApp atau booking langsung", "Fondasi SEO-ready"];
+  return <section className="section"><div className="container"><SectionHeading eyebrow="Transformasi" title="Dari informasi tercecer menjadi alur yang meyakinkan." description="Website yang baik mengurangi keraguan sebelum pelanggan menghubungi Anda."/><div className="mt-14 grid gap-4 md:grid-cols-2"><article className="border border-black/20 bg-[var(--surface)] p-7 md:p-9"><p className="eyebrow">Sebelum</p><ul className="mt-8 grid gap-4">{before.map((item) => <li className="border-b border-black/15 pb-4 text-lg" key={item}>{item}</li>)}</ul></article><article className="border border-[var(--ink)] bg-[var(--accent)] p-7 md:p-9"><p className="eyebrow">Setelah</p><ul className="mt-8 grid gap-4">{after.map((item) => <li className="flex gap-3 border-b border-black/20 pb-4 text-lg font-bold" key={item}><Check size={19} aria-hidden="true" />{item}</li>)}</ul></article></div></div></section>;
+}
+
+export function FinalCtaSection() {
+  return <section className="section bg-[var(--accent)]"><div className="container grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end"><div><p className="eyebrow">Langkah berikutnya</p><h2 className="heading">Siap membuat bisnis Anda terlihat lebih serius?</h2><p className="subheading mt-6 !text-black/70">Ceritakan bisnis dan kebutuhan Anda. ARUNA akan membantu menentukan halaman, fitur, dan kisaran investasi yang masuk akal.</p></div><Link className="button light" href="/mulai-project">Mulai Project <ArrowRight size={18} aria-hidden="true" /></Link></div></section>;
 }

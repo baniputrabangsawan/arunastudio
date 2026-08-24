@@ -27,6 +27,7 @@ export async function Footer() {
               <Link href="/portfolio">Portfolio</Link>
               <Link href="/harga">Harga</Link>
               <Link href="/blog">Journal</Link>
+              <Link href="/kontak">Konsultasi singkat</Link>
             </div>
           </div>
           <div>
@@ -34,12 +35,11 @@ export async function Footer() {
             <div className="grid gap-3 font-bold">
               {location && <p className="flex items-start gap-2"><MapPin className="mt-0.5 shrink-0" size={18} aria-hidden="true" />{location}</p>}
               {email && <a className="flex items-start gap-2 break-all" href={`mailto:${email}`}><Mail className="mt-0.5 shrink-0" size={18} aria-hidden="true" />{email}</a>}
-              <Link href="/kontak">Kontak</Link>
               <Link href="/mulai-project">Project brief</Link>
             </div>
             <div className="mt-6 flex flex-wrap gap-2" aria-label="Media sosial ARUNA">
               {socials.filter(({ href }) => href).map(({ label, href, Icon }) => (
-                <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} title={label} className="grid size-11 place-items-center border border-black/35 transition-colors hover:bg-[var(--ink)] hover:text-[var(--paper)]">
+                <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} title={label} className="social-link grid size-11 place-items-center border border-black/35">
                   <Icon size={19} aria-hidden="true" />
                 </a>
               ))}

@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPublishedPost(slug);
-  return post ? { title: post.title, description: post.excerpt } : { title: "Artikel tidak ditemukan" };
+  return post ? { title: post.title, description: post.excerpt, alternates: { canonical: `/blog/${post.slug}` }, openGraph: { type: "article", title: post.title, description: post.excerpt, images: [post.coverUrl] } } : { title: "Artikel tidak ditemukan" };
 }
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {

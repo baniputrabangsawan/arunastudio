@@ -1,4 +1,5 @@
 import { PageHero } from "@/components/page-hero";
-import { InteractiveStudio } from "@/components/interactive-studio";
-import { getPublicAvailability } from "@/lib/content-data";
-export default async function SimulationPage(){const availability=await getPublicAvailability();return <main><PageHero eyebrow="Simulasi website" title="Lihat kemungkinan website bisnis Anda." description="Masukkan identitas sederhana dan lihat arahnya secara realtime. Ini bukan desain final, tetapi awal untuk membuat ide terasa nyata."/><InteractiveStudio initialAvailability={availability}/></main>}
+import type { Metadata } from "next";
+import { SimulatorSection } from "@/components/interactive-studio";
+export const metadata:Metadata={title:"Website Simulator",description:"Lihat preview website bisnis Anda secara realtime sebelum order dan teruskan hasilnya ke project brief.",alternates:{canonical:"/simulasi"}};
+export default function SimulationPage(){return <main><PageHero eyebrow="Website Simulator" title="Lihat seperti apa website bisnis Anda sebelum order." description="Masukkan identitas sederhana dan lihat arahnya secara realtime. Data dapat diteruskan langsung ke project brief."/><SimulatorSection/></main>}

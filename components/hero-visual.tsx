@@ -65,7 +65,7 @@ export function HeroVisual() {
               <span />
               <span />
               <span />
-              <div>aruna.id</div>
+              <div>preview website</div>
             </div>
             <div className={styles.website}>
               <div className={styles.siteNav}>

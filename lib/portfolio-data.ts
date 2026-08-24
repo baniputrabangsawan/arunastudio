@@ -3,61 +3,47 @@ export type PortfolioProject = {
   name: string;
   category: string;
   type: string;
+  status: "concept" | "client";
   summary: string;
-  problem: string;
-  solution: string;
-  focus: string[];
+  challenge: string;
+  strategy: string;
+  design: string;
+  features: string[];
   imageUrl: string;
   imageAlt: string;
-  isDemo: boolean;
+  liveUrl?: string;
 };
 
 const projects: PortfolioProject[] = [
   {
-    slug: "elevatestudio",
+    slug: "elevate-studio",
     name: "Elevate Studio",
-    category: "Usaha",
-    type: "Landing Page",
-    summary: "Elevate Studio adalah photographer yang menyediakan jasa foto untuk berbagai acara.",
-    problem: "Calon pelanggan kesulitan melihat karakter visual, pilihan layanan, dan cara memesan dalam satu tempat.",
-    solution: "Portfolio foto, layanan, dan jalur pemesanan disusun menjadi landing page yang ringkas dan mudah dipercaya.",
-    focus: ["Mobile-first", "Portfolio visual", "Pemesanan jelas", "SEO-ready"],
-    imageUrl: "/images/project-rasa-nusa.webp",
-    imageAlt: "Tampilan website Elevate Studio",
-    isDemo: true,
+    category: "Studio digital",
+    type: "Company profile",
+    status: "concept",
+    summary: "Konsep website studio digital dengan positioning singkat, layanan yang mudah dipindai, dan jalur memulai project yang tegas.",
+    challenge: "Calon pelanggan perlu memahami kualitas, jenis layanan, dan cara bekerja studio sebelum bersedia menceritakan projectnya.",
+    strategy: "Positioning ditempatkan sebagai fokus utama, lalu pengguna diarahkan ke karya, layanan, proses, dan satu CTA konsultasi.",
+    design: "Komposisi gelap dan tipografi besar memberi karakter tegas, sementara aksen ungu dipakai terbatas untuk tindakan utama.",
+    features: ["Positioning layanan", "Portfolio terpilih", "Alur proses", "Project brief", "Tampilan responsif"],
+    imageUrl: "/images/elevate (1).png",
+    imageAlt: "Preview konsep website Elevate Studio",
   },
   {
     slug: "pilah-yuk",
     name: "Pilah Yuk",
-    category: "Pendidikan",
-    type: "Landing page & booking",
-    summary: "Program tersusun jelas dan konsultasi bisa dijadwalkan tanpa percakapan berulang.",
-    problem: "Informasi edukasi pengelolaan sampah tersebar dan masyarakat belum memiliki panduan tindakan yang sederhana.",
-    solution: "Materi, program, dan konsultasi disusun dalam alur yang membantu pengguna memahami dan mulai memilah sampah.",
-    focus: ["Mobile-first", "Edukasi", "Konsultasi", "SEO-ready"],
-    imageUrl: "/images/aruna-hero-business-owner.webp",
-    imageAlt: "Tampilan website Pilah Yuk",
-    isDemo: true,
-  },
-  {
-    slug: "blackyellowbarbershop",
-    name: "Blackyellow Barbershop",
-    category: "UMKM",
-    type: "Website & booking",
-    summary: "Pelanggan memilih layanan dan memesan jadwal servis dari satu halaman.",
-    problem: "Daftar layanan dan jadwal belum dapat diperiksa pelanggan sebelum menghubungi barbershop.",
-    solution: "Website menyatukan layanan, identitas brand, dan alur booking agar pemesanan lebih cepat.",
-    focus: ["Mobile-first", "Daftar layanan", "Booking", "SEO lokal"],
-    imageUrl: "/images/project-bengkel-selaras.webp",
-    imageAlt: "Tampilan website Blackyellow Barbershop",
-    isDemo: true,
+    category: "Edukasi lingkungan",
+    type: "Web app klasifikasi",
+    status: "concept",
+    summary: "Konsep web app yang membantu pengguna mengenali jenis sampah dan memahami tindakan lanjut dengan batas penggunaan yang jelas.",
+    challenge: "Klasifikasi perlu terasa sederhana bagi pengguna umum tanpa menyamarkan keterbatasan hasil dan pentingnya aturan pengelolaan setempat.",
+    strategy: "Alur dibagi menjadi unggah, preview, hasil, dan panduan. Penjelasan batas hasil ditempatkan dekat dengan keputusan pengguna.",
+    design: "Palet hijau lembut, label langkah, dan panel instruksi menjaga pengalaman edukatif tetap tenang dan mudah diikuti.",
+    features: ["Unggah atau kamera", "Preview gambar", "Hasil klasifikasi", "Panduan tindakan", "Penjelasan batas hasil"],
+    imageUrl: "/images/pilahyuk (1).png",
+    imageAlt: "Preview konsep web app Pilah Yuk",
   },
 ];
 
-export async function getPublishedProjects(): Promise<PortfolioProject[]> {
-  return projects;
-}
-
-export async function getPublishedProject(slug: string): Promise<PortfolioProject | null> {
-  return projects.find((project) => project.slug === slug) ?? null;
-}
+export async function getPublishedProjects(): Promise<PortfolioProject[]> { return projects; }
+export async function getPublishedProject(slug: string): Promise<PortfolioProject | null> { return projects.find((project) => project.slug === slug) ?? null; }

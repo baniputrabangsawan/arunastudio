@@ -15,7 +15,7 @@ export function Hero() {
               <span className="hero-title-line">Biar pelanggan</span>{" "}
               <span className="hero-title-line">langsung percaya.</span>
             </h1>
-            <p className="subheading mx-auto mb-0 mt-7 max-w-[54ch]">ARUNA membuat website yang rapi, cepat, dan mudah dipakai untuk menjual bisnis Anda.</p>
+            <p className="subheading mx-auto mb-0 mt-7 max-w-[54ch]">ARUNA membuat website yang rapi, cepat, dan membantu pelanggan memilih bisnis Anda.</p>
             <div className="mt-9 flex flex-wrap justify-center gap-3">
               <Link className="button" href="/mulai-project">Mulai Project <ArrowUpRight size={18} aria-hidden="true" /></Link>
               <Link className="button secondary" href="/portfolio">Lihat Portfolio</Link>
