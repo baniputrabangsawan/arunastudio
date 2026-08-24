@@ -1,23 +1,25 @@
 # ARUNA Website
 
-Website jasa pembuatan website untuk UMKM Indonesia, dibangun dengan Next.js, TypeScript, Tailwind CSS, Zod, PostgreSQL, dan Prisma.
+Website frontend ARUNA untuk jasa pembuatan website UMKM Indonesia. Dibangun dengan Next.js, TypeScript, Tailwind CSS, dan GSAP.
 
 ## Menjalankan lokal
 
-1. Salin `.env.example` menjadi `.env.local` dan isi nilai yang dibutuhkan.
-2. Jalankan `pnpm install`.
-3. Jika memakai database, jalankan `pnpm prisma migrate dev --name init`.
-4. Jalankan `pnpm dev`.
-
-Tanpa `DATABASE_URL`, UI publik tetap dapat dijalankan dan submission project brief memakai mode penerimaan demo. Sebelum produksi, sambungkan penyimpanan di `app/api/project-brief/route.ts` ke model Prisma.
+1. Jalankan `pnpm install`.
+2. Opsional: buat `.env.local` untuk mengatur kanal publik berikut:
+   - `NEXT_PUBLIC_SITE_URL`
+   - `NEXT_PUBLIC_CONTACT_EMAIL`
+   - `NEXT_PUBLIC_WHATSAPP_NUMBER`
+   - `NEXT_PUBLIC_THREADS_URL`
+3. Jalankan `pnpm dev`.
 
 ## Produksi
 
-- Jalankan migration dengan `pnpm prisma migrate deploy`.
-- Isi `NEXT_PUBLIC_SITE_URL`, kanal kontak, `AUTH_SECRET`, dan provider email/AI sesuai kebutuhan.
-- Jalankan `pnpm build`, lalu `pnpm start` pada VPS/container atau gunakan platform Next.js yang kompatibel.
+- Jalankan `pnpm lint`, `pnpm typecheck`, dan `pnpm build`.
+- Jalankan hasil produksi dengan `pnpm start` atau deploy ke platform Next.js.
 - Jangan memasukkan `.env` atau secret ke repository.
 
-## Konten
+## Arsitektur
 
-Data awal berada di `lib/data.ts`. Portfolio yang tampil saat ini diberi label konsep demonstrasi agar tidak menyerupai klaim klien palsu. Schema Prisma telah menyiapkan model CMS untuk portfolio, layanan, pricing, FAQ, blog, leads, availability, dan site settings.
+Website ini tidak memiliki dashboard admin, API internal, autentikasi, atau database. Konten publik berada di `lib/content-data.ts` dan `lib/portfolio-data.ts`, sehingga semua halaman dapat diprerender saat build.
+
+Formulir kontak dan project brief diproses sepenuhnya di browser. Data diteruskan ke WhatsApp atau aplikasi email sesuai environment variable publik. Jika keduanya belum dikonfigurasi, pesan disalin ke clipboard agar tetap dapat dikirim melalui kanal kontak yang tersedia.

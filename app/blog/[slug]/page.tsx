@@ -6,8 +6,6 @@ import { ArticleContent } from "@/components/article-content";
 import { PortfolioImage } from "@/components/portfolio-image";
 import { getPublishedPost, getPublishedPosts } from "@/lib/content-data";
 
-export const revalidate = 300;
-
 export async function generateStaticParams() {
   return (await getPublishedPosts()).map(({ slug }) => ({ slug }));
 }

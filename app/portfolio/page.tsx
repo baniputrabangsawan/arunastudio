@@ -6,8 +6,6 @@ import { PageHero } from "@/components/page-hero";
 import { PortfolioImage } from "@/components/portfolio-image";
 
 export const metadata: Metadata = { title: "Portfolio", description: "Eksplorasi konsep dan karya website ARUNA." };
-export const revalidate = 300;
-
 export default async function PortfolioPage() {
   const projects = await getPublishedProjects();
   return <main>

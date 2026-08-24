@@ -4,8 +4,6 @@ import { InteractiveStudio } from "@/components/interactive-studio";
 import { getPublishedProjects } from "@/lib/portfolio-data";
 import { getPublicAvailability, getPublishedFaqs, getPublishedPricing, getPublishedServices } from "@/lib/content-data";
 
-export const revalidate = 300;
-
 export default async function HomePage() {
   const [projects, services, pricing, faqs, availability] = await Promise.all([getPublishedProjects(), getPublishedServices(), getPublishedPricing(), getPublishedFaqs(), getPublicAvailability()]);
   const schema = { "@context":"https://schema.org", "@type":"ProfessionalService", name:"ARUNA", description:"Jasa pembuatan website untuk bisnis kecil dan UMKM Indonesia", areaServed:"Indonesia" };

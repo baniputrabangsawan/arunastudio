@@ -1,10 +1,3 @@
-import { cache } from "react";
-import { unstable_cache } from "next/cache";
-import { prisma } from "@/lib/prisma";
-
-export const PORTFOLIO_CACHE_TAG = "public-portfolio";
-const PUBLIC_REVALIDATE_SECONDS = 300;
-
 export type PortfolioProject = {
   slug: string;
   name: string;
@@ -19,74 +12,52 @@ export type PortfolioProject = {
   isDemo: boolean;
 };
 
-type PortfolioWithMedia = {
-  slug: string;
-  name: string;
-  category: string;
-  description: string;
-  problem: string;
-  solution: string;
-  type?: string;
-  focus?: string[];
-  isDemo?: boolean;
-  media: Array<{ url: string; alt: string }>;
-};
+const projects: PortfolioProject[] = [
+  {
+    slug: "elevatestudio",
+    name: "Elevate Studio",
+    category: "Usaha",
+    type: "Landing Page",
+    summary: "Elevate Studio adalah photographer yang menyediakan jasa foto untuk berbagai acara.",
+    problem: "Calon pelanggan kesulitan melihat karakter visual, pilihan layanan, dan cara memesan dalam satu tempat.",
+    solution: "Portfolio foto, layanan, dan jalur pemesanan disusun menjadi landing page yang ringkas dan mudah dipercaya.",
+    focus: ["Mobile-first", "Portfolio visual", "Pemesanan jelas", "SEO-ready"],
+    imageUrl: "/images/project-rasa-nusa.webp",
+    imageAlt: "Tampilan website Elevate Studio",
+    isDemo: true,
+  },
+  {
+    slug: "pilah-yuk",
+    name: "Pilah Yuk",
+    category: "Pendidikan",
+    type: "Landing page & booking",
+    summary: "Program tersusun jelas dan konsultasi bisa dijadwalkan tanpa percakapan berulang.",
+    problem: "Informasi edukasi pengelolaan sampah tersebar dan masyarakat belum memiliki panduan tindakan yang sederhana.",
+    solution: "Materi, program, dan konsultasi disusun dalam alur yang membantu pengguna memahami dan mulai memilah sampah.",
+    focus: ["Mobile-first", "Edukasi", "Konsultasi", "SEO-ready"],
+    imageUrl: "/images/aruna-hero-business-owner.webp",
+    imageAlt: "Tampilan website Pilah Yuk",
+    isDemo: true,
+  },
+  {
+    slug: "blackyellowbarbershop",
+    name: "Blackyellow Barbershop",
+    category: "UMKM",
+    type: "Website & booking",
+    summary: "Pelanggan memilih layanan dan memesan jadwal servis dari satu halaman.",
+    problem: "Daftar layanan dan jadwal belum dapat diperiksa pelanggan sebelum menghubungi barbershop.",
+    solution: "Website menyatukan layanan, identitas brand, dan alur booking agar pemesanan lebih cepat.",
+    focus: ["Mobile-first", "Daftar layanan", "Booking", "SEO lokal"],
+    imageUrl: "/images/project-bengkel-selaras.webp",
+    imageAlt: "Tampilan website Blackyellow Barbershop",
+    isDemo: true,
+  },
+];
 
-function mapPortfolio(project: PortfolioWithMedia): PortfolioProject {
-  const image = project.media[0];
-  return {
-    slug: project.slug,
-    name: project.name,
-    category: project.category,
-    type: project.type ?? "Website",
-    summary: project.description,
-    problem: project.problem,
-    solution: project.solution,
-    focus: project.focus ?? [],
-    imageUrl: image?.url || "/images/aruna-hero-business-owner.webp",
-    imageAlt: image?.alt || `Tampilan website ${project.name}`,
-    isDemo: project.isDemo ?? false,
-  };
+export async function getPublishedProjects(): Promise<PortfolioProject[]> {
+  return projects;
 }
 
-const projectSelect = {
-  slug: true,
-  name: true,
-  category: true,
-  description: true,
-  problem: true,
-  solution: true,
-  type: true,
-  focus: true,
-  isDemo: true,
-  media: { orderBy: { order: "asc" as const }, take: 1, select: { url: true, alt: true } },
-};
-
-const queryPublishedProjects = unstable_cache(
-  async () => (await prisma.portfolio.findMany({
-    where: { published: true },
-    orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-    select: projectSelect,
-  })).map(mapPortfolio),
-  [PORTFOLIO_CACHE_TAG],
-  { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: [PORTFOLIO_CACHE_TAG] },
-);
-
-const queryPublishedProject = unstable_cache(
-  async (slug: string) => {
-    const project = await prisma.portfolio.findFirst({ where: { slug, published: true }, select: projectSelect });
-    return project ? mapPortfolio(project) : null;
-  },
-  ["public-portfolio-detail"],
-  { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: [PORTFOLIO_CACHE_TAG] },
-);
-
-export const getPublishedProjects = cache(async (): Promise<PortfolioProject[]> => {
-  if (!process.env.DATABASE_URL) return [];
-  try { return await queryPublishedProjects(); } catch { return []; }
-});
-
-export const getPublishedProject = cache(async (slug: string): Promise<PortfolioProject | null> => {
-  if (!process.env.DATABASE_URL) return null;
-  try { return await queryPublishedProject(slug); } catch { return null; }
-});
+export async function getPublishedProject(slug: string): Promise<PortfolioProject | null> {
+  return projects.find((project) => project.slug === slug) ?? null;
+}

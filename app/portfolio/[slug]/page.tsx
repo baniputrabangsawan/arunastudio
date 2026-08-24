@@ -6,8 +6,6 @@ import { getPublishedProject, getPublishedProjects } from "@/lib/portfolio-data"
 import { PageHero } from "@/components/page-hero";
 import { PortfolioImage } from "@/components/portfolio-image";
 
-export const revalidate = 300;
-
 export async function generateStaticParams() {
   return (await getPublishedProjects()).map(({ slug }) => ({ slug }));
 }

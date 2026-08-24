@@ -1,6 +1,3 @@
-"use client";
-
-import { usePathname } from "next/navigation";
 import { ParallaxProvider } from "@/components/parallax-provider";
 
 type SiteShellProps = {
@@ -11,10 +8,6 @@ type SiteShellProps = {
 };
 
 export function SiteShell({ children, header, footer, whatsapp }: SiteShellProps) {
-  const pathname = usePathname();
-
-  if (pathname.startsWith("/admin")) return children;
-
   return (
     <>
       {header}

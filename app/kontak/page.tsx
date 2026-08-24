@@ -6,8 +6,6 @@ import { ContactForm } from "@/components/contact-form";
 import { getPublicSettings } from "@/lib/content-data";
 
 export const metadata: Metadata = { title: "Kontak", description: "Hubungi ARUNA untuk konsultasi website bisnis." };
-export const revalidate = 300;
-
 export default async function ContactPage() {
   const settings = await getPublicSettings();
   const { email, location, whatsapp } = settings;
@@ -39,7 +37,7 @@ export default async function ContactPage() {
             </div>
             <Link className="text-link mt-8" href="/mulai-project">Atau isi project brief lengkap</Link>
           </div>
-          <ContactForm />
+          <ContactForm contactEmail={email} whatsapp={whatsapp} />
         </div>
       </section>
     </main>

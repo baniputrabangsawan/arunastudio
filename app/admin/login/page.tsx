@@ -1,2 +1,0 @@
-import { AdminLogin } from "@/components/admin-login";
-export default function AdminLoginPage(){return <main className="min-h-screen bg-[var(--canvas)] px-5 pb-20 pt-36"><div className="mb-9 text-center"><p className="eyebrow justify-center before:hidden">ARUNA Studio</p><h1 className="font-display text-5xl">Admin</h1><p className="mt-3 text-[var(--muted)]">Area ini hanya untuk pengelola yang berwenang.</p></div><AdminLogin/></main>}

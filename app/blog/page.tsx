@@ -6,8 +6,6 @@ import { PortfolioImage } from "@/components/portfolio-image";
 import { getPublishedPosts } from "@/lib/content-data";
 
 export const metadata: Metadata = { title: "Journal", description: "Panduan website, SEO, dan digitalisasi bisnis untuk UMKM." };
-export const revalidate = 300;
-
 export default async function BlogPage() {
   const posts = await getPublishedPosts();
 

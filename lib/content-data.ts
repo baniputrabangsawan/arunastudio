@@ -1,18 +1,4 @@
-import { cache } from "react";
-import { unstable_cache } from "next/cache";
-import { prisma } from "@/lib/prisma";
 import { siteConfig } from "@/lib/site-config";
-
-export const PUBLIC_CACHE_TAGS = {
-  services: "public-services",
-  pricing: "public-pricing",
-  faqs: "public-faqs",
-  posts: "public-posts",
-  settings: "public-settings",
-  availability: "public-availability",
-} as const;
-
-const PUBLIC_REVALIDATE_SECONDS = 300;
 
 export type PublicService = { slug: string; title: string; group: string; description: string; items: string[] };
 export type PublicPricingPlan = { slug: string; name: string; price: string; note: string; featured: boolean; features: string[] };
@@ -30,19 +16,46 @@ export type PublicSettings = {
 };
 export type PublicAvailability = { status: string; slots: number | null; message: string };
 
-type ServiceRow = Omit<PublicService, "items"> & { items?: unknown };
+const services: PublicService[] = [
+  { slug: "website-bisnis", group: "Website", title: "Website Bisnis", description: "Company profile, landing page, dan toko online yang membuat bisnis mudah dipercaya.", items: ["Landing Page", "Company Profile", "Website UMKM", "E-commerce"] },
+  { slug: "sistem-bisnis", group: "Sistem", title: "Sistem yang Memudahkan", description: "Alur booking, dashboard, dan aplikasi khusus untuk pekerjaan yang lebih ringkas.", items: ["Booking System", "Dashboard / Admin", "Custom Web App"] },
+  { slug: "pertumbuhan", group: "Growth", title: "Tumbuh Lebih Terarah", description: "Fondasi SEO, identitas brand, dan dukungan rutin setelah website tayang.", items: ["SEO", "Branding", "Maintenance"] },
+  { slug: "otomasi", group: "Automation", title: "Otomasi yang Relevan", description: "Integrasi AI dan otomatisasi hanya untuk proses yang benar-benar memberi manfaat.", items: ["Automation", "AI Integration", "API Integration"] },
+];
 
-function mapService(service: ServiceRow): PublicService {
-  return {
-    slug: service.slug,
-    title: service.title,
-    group: service.group,
-    description: service.description,
-    items: Array.isArray(service.items) ? service.items.filter((item): item is string => typeof item === "string") : [],
-  };
-}
+const pricing: PublicPricingPlan[] = [
+  { slug: "landing-page", name: "Landing Page", price: "Rp400-800 ribu", note: "Satu halaman yang fokus mengubah perhatian menjadi tindakan.", features: ["Desain custom", "Mobile responsive", "WhatsApp & formulir", "SEO dasar"], featured: false },
+  { slug: "company-profile", name: "Company Profile", price: "Rp900 ribu-1,4 juta", note: "Rumah digital lengkap untuk bisnis yang ingin tampil lebih serius.", features: ["Hingga 6 halaman", "CMS konten", "Optimasi performa", "SEO on-page"], featured: true },
+  { slug: "custom-website", name: "Custom Website", price: "Mulai Rp2 juta", note: "Untuk alur dan sistem yang disesuaikan dengan cara bisnis Anda bekerja.", features: ["Scope fleksibel", "Booking / e-commerce", "Dashboard", "Integrasi API"], featured: false },
+];
 
-const defaultSettings: PublicSettings = {
+const faqs: PublicFaq[] = [
+  { question: "Berapa lama website selesai?", answer: "Landing page umumnya 7-14 hari kerja. Company profile sekitar 2-4 minggu. Waktu final bergantung pada kelengkapan materi dan ruang lingkup." },
+  { question: "Apakah sudah termasuk domain dan hosting?", answer: "Domain dan hosting dapat ditambahkan sesuai kebutuhan. Biayanya selalu ditampilkan terpisah sebelum project dimulai." },
+  { question: "Apakah website nyaman dibuka di HP?", answer: "Ya. Setiap website dirancang mobile-first, lalu disesuaikan untuk tablet dan desktop." },
+  { question: "Apakah saya bisa mengubah isi website sendiri?", answer: "Bisa. Kami dapat menyediakan CMS agar teks, foto, layanan, atau artikel dapat Anda perbarui tanpa menyentuh kode." },
+  { question: "Apakah website bisa muncul di Google?", answer: "Kami menyiapkan fondasi teknis SEO dan membantu proses indeksasi. Posisi pencarian tetap dipengaruhi kompetisi, kualitas konten, dan konsistensi optimasi." },
+  { question: "Bagaimana sistem pembayarannya?", answer: "Pembayaran dibagi berdasarkan milestone yang disepakati. Seluruh scope, biaya, dan jadwal dijelaskan sebelum pengerjaan dimulai." },
+  { question: "Apakah ARUNA melayani seluruh Indonesia?", answer: "Ya. Konsultasi, review, dan serah terima dapat dilakukan secara daring dari mana pun di Indonesia." },
+];
+
+const articleContent = `Website yang baik membantu pelanggan memahami bisnis, menemukan jawaban, dan mengambil tindakan tanpa kebingungan. Desain harus dimulai dari perjalanan pelanggan, bukan dari daftar efek visual.
+
+## Mulai dari pertanyaan pelanggan
+
+Susun informasi berdasarkan hal yang paling ingin diketahui calon pelanggan: apa yang ditawarkan, untuk siapa, berapa kisaran biayanya, dan bagaimana cara memulai. Struktur yang jelas sering memberi dampak lebih besar daripada fitur yang banyak.
+
+## Tunjukkan alasan untuk percaya
+
+Tampilkan proses, scope, harga, dan karya secara jujur. Pengalaman digital perlu konsisten dengan cara bisnis berkomunikasi.`;
+
+const posts: PublicPost[] = [
+  { slug: "website-bukan-sekadar-etalase", title: "Website harus membantu pelanggan bertindak", excerpt: "Susun website berdasarkan pertanyaan dan tindakan pelanggan, bukan daftar informasi bisnis.", category: "Website Bisnis", date: "18 Agustus 2026", coverUrl: "/images/project-rasa-nusa.webp", content: articleContent },
+  { slug: "tanda-bisnis-perlu-website", title: "5 tanda bisnis Anda sudah perlu website", excerpt: "Saat WhatsApp dan media sosial mulai tidak cukup untuk menjawab kebutuhan pelanggan.", category: "UMKM", date: "10 Agustus 2026", coverUrl: "/images/aruna-hero-business-owner.webp", content: articleContent },
+  { slug: "seo-lokal-sederhana", title: "Fondasi SEO lokal yang sering terlewat", excerpt: "Langkah kecil untuk membantu calon pelanggan menemukan bisnis Anda lewat pencarian.", category: "SEO", date: "2 Agustus 2026", coverUrl: "/images/project-bengkel-selaras.webp", content: articleContent },
+];
+
+const settings: PublicSettings = {
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "",
   location: "Makassar, Indonesia",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "",
@@ -52,183 +65,34 @@ const defaultSettings: PublicSettings = {
   threadsUrl: process.env.NEXT_PUBLIC_THREADS_URL || "",
 };
 
-function formatDate(date: Date) {
-  return date.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+export async function getPublishedServices(): Promise<PublicService[]> {
+  return services;
 }
 
-function formatRupiah(min: number, max: number | null) {
-  const compact = (value: number) => value >= 1_000_000 ? `${Number((value / 1_000_000).toFixed(1))} juta` : `${Math.round(value / 1_000)} ribu`;
-  if (!max) return `Mulai Rp${compact(min)}`;
-  const minLabel = compact(min);
-  const maxLabel = compact(max);
-  if (min < 1_000_000 && max < 1_000_000) return `Rp${minLabel.replace(" ribu", "")}-${maxLabel}`;
-  return `Rp${minLabel}-${maxLabel}`;
+export async function getPublishedService(slug: string): Promise<PublicService | null> {
+  return services.find((service) => service.slug === slug) ?? null;
 }
 
-const queryPublishedServices = unstable_cache(
-  async () => (await prisma.service.findMany({
-    where: { published: true },
-    orderBy: { order: "asc" },
-    select: { slug: true, title: true, group: true, description: true, items: true },
-  })).map(mapService),
-  [PUBLIC_CACHE_TAGS.services],
-  { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: [PUBLIC_CACHE_TAGS.services] },
-);
+export async function getPublishedPricing(): Promise<PublicPricingPlan[]> {
+  return pricing;
+}
 
-const queryPublishedService = unstable_cache(
-  async (slug: string) => {
-    const service = await prisma.service.findFirst({
-      where: { slug, published: true },
-      select: { slug: true, title: true, group: true, description: true, items: true },
-    });
-    return service ? mapService(service) : null;
-  },
-  ["public-service-detail"],
-  { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: [PUBLIC_CACHE_TAGS.services] },
-);
+export async function getPublishedFaqs(): Promise<PublicFaq[]> {
+  return faqs;
+}
 
-const queryPublishedPricing = unstable_cache(
-  async () => {
-    const plans = await prisma.pricingPlan.findMany({
-      where: { published: true },
-      orderBy: { order: "asc" },
-      include: { features: { where: { included: true }, orderBy: { order: "asc" } } },
-    });
-    return plans.map((plan) => ({
-      slug: plan.slug,
-      name: plan.name,
-      price: formatRupiah(plan.priceMin, plan.priceMax),
-      note: plan.description,
-      featured: plan.featured,
-      features: plan.features.map((feature) => feature.label),
-    }));
-  },
-  [PUBLIC_CACHE_TAGS.pricing],
-  { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: [PUBLIC_CACHE_TAGS.pricing] },
-);
+export async function getPublishedPosts(): Promise<PublicPostSummary[]> {
+  return posts;
+}
 
-const queryPublishedFaqs = unstable_cache(
-  () => prisma.fAQ.findMany({
-    where: { published: true },
-    orderBy: { order: "asc" },
-    select: { question: true, answer: true },
-  }),
-  [PUBLIC_CACHE_TAGS.faqs],
-  { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: [PUBLIC_CACHE_TAGS.faqs] },
-);
+export async function getPublishedPost(slug: string): Promise<PublicPost | null> {
+  return posts.find((post) => post.slug === slug) ?? null;
+}
 
-const queryPublishedPosts = unstable_cache(
-  async (): Promise<PublicPostSummary[]> => {
-    const posts = await prisma.blogPost.findMany({
-      where: { publishedAt: { not: null } },
-      orderBy: { order: "asc" },
-      select: { slug: true, title: true, excerpt: true, coverUrl: true, publishedAt: true, category: { select: { name: true } } },
-    });
-    return posts.map((post) => ({
-      slug: post.slug,
-      title: post.title,
-      excerpt: post.excerpt,
-      category: post.category.name,
-      date: formatDate(post.publishedAt!),
-      coverUrl: post.coverUrl || "/images/aruna-hero-business-owner.webp",
-    }));
-  },
-  [PUBLIC_CACHE_TAGS.posts],
-  { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: [PUBLIC_CACHE_TAGS.posts] },
-);
+export async function getPublicSettings(): Promise<PublicSettings> {
+  return settings;
+}
 
-const queryPublishedPost = unstable_cache(
-  async (slug: string): Promise<PublicPost | null> => {
-    const post = await prisma.blogPost.findFirst({
-      where: { slug, publishedAt: { not: null } },
-      select: { slug: true, title: true, excerpt: true, content: true, coverUrl: true, publishedAt: true, category: { select: { name: true } } },
-    });
-    return post ? {
-      slug: post.slug,
-      title: post.title,
-      excerpt: post.excerpt,
-      content: post.content,
-      category: post.category.name,
-      date: formatDate(post.publishedAt!),
-      coverUrl: post.coverUrl || "/images/aruna-hero-business-owner.webp",
-    } : null;
-  },
-  ["public-post-detail"],
-  { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: [PUBLIC_CACHE_TAGS.posts] },
-);
-
-const queryPublicSettings = unstable_cache(
-  async (): Promise<PublicSettings> => {
-    const rows = await prisma.siteSetting.findMany({
-      where: { key: { in: ["contact.email", "contact.location", "contact.whatsapp", "social.github", "social.linkedin", "social.instagram", "social.threads"] } },
-    });
-    const values = Object.fromEntries(rows.map((row) => [row.key, row.value]));
-    return {
-      email: values["contact.email"] ?? defaultSettings.email,
-      location: values["contact.location"] ?? defaultSettings.location,
-      whatsapp: values["contact.whatsapp"] ?? defaultSettings.whatsapp,
-      githubUrl: values["social.github"] ?? defaultSettings.githubUrl,
-      linkedinUrl: values["social.linkedin"] ?? defaultSettings.linkedinUrl,
-      instagramUrl: values["social.instagram"] ?? defaultSettings.instagramUrl,
-      threadsUrl: values["social.threads"] ?? defaultSettings.threadsUrl,
-    };
-  },
-  [PUBLIC_CACHE_TAGS.settings],
-  { revalidate: PUBLIC_REVALIDATE_SECONDS, tags: [PUBLIC_CACHE_TAGS.settings] },
-);
-
-const queryPublicAvailability = unstable_cache(
-  async (): Promise<PublicAvailability> => {
-    const latest = await prisma.availability.findFirst({ orderBy: { updatedAt: "desc" } });
-    if (!latest) return siteConfig.availability;
-    return {
-      status: latest.status,
-      slots: latest.slots,
-      message: latest.estimatedStart
-        ? `Estimasi project berikutnya dimulai ${latest.estimatedStart.toLocaleDateString("id-ID")}.`
-        : siteConfig.availability.message,
-    };
-  },
-  [PUBLIC_CACHE_TAGS.availability],
-  { revalidate: 60, tags: [PUBLIC_CACHE_TAGS.availability] },
-);
-
-export const getPublishedServices = cache(async (): Promise<PublicService[]> => {
-  if (!process.env.DATABASE_URL) return [];
-  try { return await queryPublishedServices(); } catch { return []; }
-});
-
-export const getPublishedService = cache(async (slug: string): Promise<PublicService | null> => {
-  if (!process.env.DATABASE_URL) return null;
-  try { return await queryPublishedService(slug); } catch { return null; }
-});
-
-export const getPublishedPricing = cache(async (): Promise<PublicPricingPlan[]> => {
-  if (!process.env.DATABASE_URL) return [];
-  try { return await queryPublishedPricing(); } catch { return []; }
-});
-
-export const getPublishedFaqs = cache(async (): Promise<PublicFaq[]> => {
-  if (!process.env.DATABASE_URL) return [];
-  try { return await queryPublishedFaqs(); } catch { return []; }
-});
-
-export const getPublishedPosts = cache(async (): Promise<PublicPostSummary[]> => {
-  if (!process.env.DATABASE_URL) return [];
-  try { return await queryPublishedPosts(); } catch { return []; }
-});
-
-export const getPublishedPost = cache(async (slug: string): Promise<PublicPost | null> => {
-  if (!process.env.DATABASE_URL) return null;
-  try { return await queryPublishedPost(slug); } catch { return null; }
-});
-
-export const getPublicSettings = cache(async (): Promise<PublicSettings> => {
-  if (!process.env.DATABASE_URL) return defaultSettings;
-  try { return await queryPublicSettings(); } catch { return defaultSettings; }
-});
-
-export const getPublicAvailability = cache(async (): Promise<PublicAvailability> => {
-  if (!process.env.DATABASE_URL) return siteConfig.availability;
-  try { return await queryPublicAvailability(); } catch { return siteConfig.availability; }
-});
+export async function getPublicAvailability(): Promise<PublicAvailability> {
+  return siteConfig.availability;
+}

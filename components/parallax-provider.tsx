@@ -12,8 +12,6 @@ export function ParallaxProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname.startsWith("/admin")) return;
-
     const root = document.getElementById("main-content");
     if (!root) return;
 
