@@ -1,22 +1,26 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
 import { ParallaxProvider } from "@/components/parallax-provider";
-import { WhatsAppButton } from "@/components/whatsapp-button";
 
-export function SiteShell({ children }: { children: React.ReactNode }) {
+type SiteShellProps = {
+  children: React.ReactNode;
+  header: React.ReactNode;
+  footer: React.ReactNode;
+  whatsapp: React.ReactNode;
+};
+
+export function SiteShell({ children, header, footer, whatsapp }: SiteShellProps) {
   const pathname = usePathname();
 
   if (pathname.startsWith("/admin")) return children;
 
   return (
     <>
-      <Header />
+      {header}
       <ParallaxProvider>{children}</ParallaxProvider>
-      <WhatsAppButton />
-      <Footer />
+      {whatsapp}
+      {footer}
     </>
   );
 }

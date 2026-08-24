@@ -2,11 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Check } from "lucide-react";
-import { getPublishedProject } from "@/lib/portfolio-data";
+import { getPublishedProject, getPublishedProjects } from "@/lib/portfolio-data";
 import { PageHero } from "@/components/page-hero";
 import { PortfolioImage } from "@/components/portfolio-image";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  return (await getPublishedProjects()).map(({ slug }) => ({ slug }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -24,7 +28,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       <div className="container">
         <div className="relative aspect-[4/3] overflow-hidden border border-black/20 lg:aspect-[16/9]" data-parallax-viewport>
           <div className="parallax-media-layer" data-parallax="media">
-            <PortfolioImage src={project.imageUrl} alt={project.imageAlt} priority sizes="100vw" className="object-cover" />
+            <PortfolioImage src={project.imageUrl} alt={project.imageAlt} sizes="(max-width: 1320px) 100vw, 1320px" className="object-cover" />
           </div>
         </div>
         <div className="mt-16 grid gap-10 lg:grid-cols-12">

@@ -6,7 +6,7 @@ import { ContactForm } from "@/components/contact-form";
 import { getPublicSettings } from "@/lib/content-data";
 
 export const metadata: Metadata = { title: "Kontak", description: "Hubungi ARUNA untuk konsultasi website bisnis." };
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function ContactPage() {
   const settings = await getPublicSettings();

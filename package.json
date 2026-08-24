@@ -6,7 +6,7 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "db:push": "prisma db push",
     "db:seed:portfolio": "node --env-file=.env prisma/seed-portfolio.mjs",
@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
-    "@gsap/react": "^2.1.2",
     "@prisma/client": "6.14.0",
     "gsap": "^3.15.0",
     "lucide-react": "0.468.0",
@@ -29,6 +28,8 @@
     "@types/node": "22.18.0",
     "@types/react": "19.1.12",
     "@types/react-dom": "19.1.9",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.3.2",
     "prisma": "6.14.0",
     "tailwindcss": "4.1.12",
     "typescript": "5.9.2"

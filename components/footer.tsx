@@ -1,33 +1,9 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { ArrowUpRight, AtSign, Github, Instagram, Linkedin, Mail, MapPin } from "lucide-react";
-import { contactDetails } from "@/lib/contact-details";
-import type { PublicSettings } from "@/lib/content-data";
+import { getPublicSettings } from "@/lib/content-data";
 
-const fallbackSettings: PublicSettings = {
-  email: contactDetails.email || "",
-  location: contactDetails.location,
-  whatsapp: "",
-  githubUrl: contactDetails.githubUrl,
-  linkedinUrl: contactDetails.linkedinUrl,
-  instagramUrl: contactDetails.instagramUrl,
-  threadsUrl: contactDetails.threadsUrl || "",
-};
-
-export function Footer() {
-  const [settings, setSettings] = useState(fallbackSettings);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/site-settings", { signal: controller.signal })
-      .then((response) => response.ok ? response.json() as Promise<PublicSettings> : Promise.reject())
-      .then(setSettings)
-      .catch(() => undefined);
-    return () => controller.abort();
-  }, []);
-
+export async function Footer() {
+  const settings = await getPublicSettings();
   const { email, location } = settings;
   const socials = [
     { label: "GitHub", href: settings.githubUrl, Icon: Github },

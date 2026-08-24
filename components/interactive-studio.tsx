@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { ArrowRight, CalendarClock, Check, Sparkles } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { rupiah } from "@/lib/utils";
 import { siteConfig } from "@/lib/site-config";
+import type { PublicAvailability } from "@/lib/content-data";
 
 const basePrices: Record<string, number> = { "Landing Page": 400000, "Company Profile": 900000, "E-commerce": 2200000, Booking: 1800000, Custom: 2500000 };
 const featurePrices: Record<string, number> = { CMS: 300000, WhatsApp: 0, "Form Kontak": 100000, Booking: 500000, Payment: 700000, "Toko Online": 900000, Dashboard: 1000000, SEO: 300000, Blog: 400000, Multibahasa: 500000, Animasi: 250000, AI: 900000, Otomasi: 700000, API: 600000 };
@@ -33,9 +34,8 @@ function Estimator() {
   return <div className="grid gap-7 md:grid-cols-[1fr_.8fr]"><div><label className="label">Ceritakan kebutuhan Anda<textarea rows={6} className="field resize-y" value={input} onChange={e=>setInput(e.target.value)} placeholder="Contoh: Saya punya bengkel dan mau website dengan daftar layanan, WhatsApp, booking servis, dan lokasi..."/></label><button className="button mt-4" onClick={estimate} disabled={!input.trim()}><Sparkles size={17}/> Buat estimasi</button></div><aside className="min-h-64 border border-black/15 bg-white p-7">{result ? <div><p className="mb-2 text-xs font-bold uppercase tracking-[.12em]">Rekomendasi</p><h3 className="font-display text-3xl">{result.type}</h3><p className="mt-3 text-xl font-black text-[var(--accent)]">{result.price}</p><ul className="mt-5 grid gap-2">{result.features.map(f=><li key={f} className="flex items-center gap-2"><Check size={16}/>{f}</li>)}</ul><p className="mt-5 text-xs text-[var(--muted)]">Estimator menggunakan fallback berbasis kebutuhan. Hasil final dikonfirmasi saat konsultasi.</p></div>:<div className="grid h-full place-content-center text-center text-[#8a817b]"><Sparkles className="mx-auto mb-3"/><p>Rekomendasi akan muncul di sini.</p></div>}</aside></div>;
 }
 
-export function InteractiveStudio() {
+export function InteractiveStudio({ initialAvailability = siteConfig.availability }: { initialAvailability?: PublicAvailability }) {
   const [tab,setTab] = useState<"harga"|"simulasi"|"ai">("harga");
-  const [availability,setAvailability]=useState(siteConfig.availability);
-  useEffect(()=>{fetch("/api/availability").then(r=>r.json()).then(data=>setAvailability(data)).catch(()=>{})},[]);
+  const availability = initialAvailability;
   return <section className="section bg-[var(--paper)]" id="studio"><div className="container"><div className="mb-12 max-w-4xl"><h2 className="heading">Coba sebelum mulai.</h2><p className="subheading mb-0 mt-6">Hitung biaya, buat preview sederhana, atau tulis kebutuhan Anda dengan bahasa sehari-hari.</p></div><div className="mb-8 flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Alat perencanaan"><button role="tab" aria-selected={tab==="harga"} className={`button whitespace-nowrap ${tab!=="harga"?"secondary":""}`} onClick={()=>setTab("harga")}>Hitung Harga</button><button role="tab" aria-selected={tab==="simulasi"} className={`button whitespace-nowrap ${tab!=="simulasi"?"secondary":""}`} onClick={()=>setTab("simulasi")}>Simulasi Website</button><button role="tab" aria-selected={tab==="ai"} className={`button whitespace-nowrap ${tab!=="ai"?"secondary":""}`} onClick={()=>setTab("ai")}>AI Estimator</button></div><div className="border border-black/20 bg-[var(--canvas)] p-5 md:p-9">{tab==="harga"?<Calculator/>:tab==="simulasi"?<Simulator/>:<Estimator/>}</div><div className="mt-6 flex items-center gap-3 border border-black/20 bg-[var(--surface)] px-5 py-4"><CalendarClock className="shrink-0 text-[var(--accent)]"/><p><strong>Slot project saat ini: {availability.status.toLowerCase()}.</strong> {availability.message}</p></div></div></section>;
 }

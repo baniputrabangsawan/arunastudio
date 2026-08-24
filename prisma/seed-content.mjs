@@ -72,7 +72,7 @@ for (const [order, [question, answer]] of faqs.entries()) {
 for (const post of posts) {
   const categorySlug = post.category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   const category = await prisma.blogCategory.upsert({ where: { slug: categorySlug }, update: { name: post.category }, create: { slug: categorySlug, name: post.category } });
-  const { category: _category, ...postData } = post;
+  const postData = { slug: post.slug, title: post.title, excerpt: post.excerpt, coverUrl: post.coverUrl, publishedAt: post.publishedAt, order: post.order };
   await prisma.blogPost.upsert({
     where: { slug: post.slug },
     update: { title: post.title, excerpt: post.excerpt, coverUrl: post.coverUrl, order: post.order, publishedAt: post.publishedAt, categoryId: category.id },

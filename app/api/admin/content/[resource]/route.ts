@@ -1,13 +1,26 @@
 import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { isAdmin } from "@/lib/admin-auth";
+import { PUBLIC_CACHE_TAGS } from "@/lib/content-data";
+import { PORTFOLIO_CACHE_TAG } from "@/lib/portfolio-data";
 
 const supported = ["leads", "portfolio", "services", "pricing", "faq", "blog", "availability", "settings"] as const;
 type Resource = (typeof supported)[number];
 
 function validResource(value: string): value is Resource { return supported.includes(value as Resource); }
+function revalidatePublicData(resource: Resource) {
+  const tag = resource === "portfolio" ? PORTFOLIO_CACHE_TAG
+    : resource === "services" ? PUBLIC_CACHE_TAGS.services
+    : resource === "pricing" ? PUBLIC_CACHE_TAGS.pricing
+    : resource === "faq" ? PUBLIC_CACHE_TAGS.faqs
+    : resource === "blog" ? PUBLIC_CACHE_TAGS.posts
+    : resource === "availability" ? PUBLIC_CACHE_TAGS.availability
+    : resource === "settings" ? PUBLIC_CACHE_TAGS.settings
+    : null;
+  if (tag) revalidateTag(tag, "max");
+}
 function unavailable() { return NextResponse.json({ items: [], configured: false, message: "DATABASE_URL belum dikonfigurasi." }); }
 function databaseMessage(error: unknown) {
   const value = error as { code?: string; errorCode?: string };
@@ -51,6 +64,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
       const { id, items, ...values } = data;
       const serviceValues = { ...values, items: items.split(",").map((item) => item.trim()).filter(Boolean) };
       const item = id ? await prisma.service.update({ where: { id }, data: serviceValues }) : await prisma.service.create({ data: serviceValues });
+      revalidatePublicData(resource);
       revalidatePath("/"); revalidatePath("/layanan"); revalidatePath(`/layanan/${item.slug}`);
       return NextResponse.json({ item });
     }
@@ -58,6 +72,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
       const data = z.object({ id: z.string().optional(), question: z.string().min(5), answer: z.string().min(5), category: z.string().optional(), order: z.number().int().nonnegative(), published: z.boolean().default(true) }).parse(body);
       const { id, ...values } = data;
       const item = id ? await prisma.fAQ.update({ where: { id }, data: values }) : await prisma.fAQ.create({ data: values });
+      revalidatePublicData(resource);
       revalidatePath("/");
       return NextResponse.json({ item });
     }
@@ -84,6 +99,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
       const item = id
         ? await prisma.portfolio.update({ where: { id }, data: { ...portfolioValues, media: { deleteMany: {}, create: media } }, include: { media: true } })
         : await prisma.portfolio.create({ data: { ...portfolioValues, media: { create: media } }, include: { media: true } });
+      revalidatePublicData(resource);
       revalidatePath("/");
       revalidatePath("/portfolio");
       revalidatePath(`/portfolio/${item.slug}`);
@@ -96,6 +112,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
       const item = id
         ? await prisma.pricingPlan.update({ where: { id }, data: { ...values, features: { deleteMany: {}, create: featureValues } }, include: { features: true } })
         : await prisma.pricingPlan.create({ data: { ...values, features: { create: featureValues } }, include: { features: true } });
+      revalidatePublicData(resource);
       revalidatePath("/"); revalidatePath("/harga");
       return NextResponse.json({ item });
     }
@@ -106,6 +123,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
       const existing = data.id ? await prisma.blogPost.findUnique({ where: { id: data.id }, select: { publishedAt: true } }) : null;
       const values = { slug: data.slug, title: data.title, excerpt: data.excerpt, content: data.content, coverUrl: data.coverUrl, order: data.order, categoryId: category.id, publishedAt: data.published ? existing?.publishedAt ?? new Date() : null };
       const item = data.id ? await prisma.blogPost.update({ where: { id: data.id }, data: values }) : await prisma.blogPost.create({ data: values });
+      revalidatePublicData(resource);
       revalidatePath("/blog"); revalidatePath(`/blog/${item.slug}`); revalidatePath("/");
       return NextResponse.json({ item });
     }
@@ -113,11 +131,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
       const data = z.object({ id: z.string().optional(), status: z.enum(["Available", "Limited", "Fully booked"]), slots: z.number().int().nonnegative(), estimatedStart: z.string().nullable() }).parse(body);
       const values = { status: data.status, slots: data.slots, estimatedStart: data.estimatedStart ? new Date(data.estimatedStart) : null };
       const item = data.id ? await prisma.availability.update({ where: { id: data.id }, data: values }) : await prisma.availability.create({ data: values });
+      revalidatePublicData(resource);
       return NextResponse.json({ item });
     }
     if (resource === "settings") {
       const data = z.object({ key: z.string().min(2), value: z.string() }).parse(body);
       const item = await prisma.siteSetting.upsert({ where: { key: data.key }, update: { value: data.value }, create: data });
+      revalidatePublicData(resource);
       revalidatePath("/"); revalidatePath("/kontak");
       return NextResponse.json({ item });
     }
@@ -139,14 +159,15 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ r
   try {
     if (resource === "portfolio") {
       const item = await prisma.portfolio.delete({ where: { id } });
+      revalidatePublicData(resource);
       revalidatePath("/");
       revalidatePath("/portfolio");
       revalidatePath(`/portfolio/${item.slug}`);
     }
-    else if (resource === "services") { await prisma.service.delete({ where: { id } }); revalidatePath("/"); revalidatePath("/layanan"); }
-    else if (resource === "pricing") { await prisma.pricingPlan.delete({ where: { id } }); revalidatePath("/"); revalidatePath("/harga"); }
-    else if (resource === "faq") { await prisma.fAQ.delete({ where: { id } }); revalidatePath("/"); }
-    else if (resource === "blog") { await prisma.blogPost.delete({ where: { id } }); revalidatePath("/blog"); }
+    else if (resource === "services") { await prisma.service.delete({ where: { id } }); revalidatePublicData(resource); revalidatePath("/"); revalidatePath("/layanan"); }
+    else if (resource === "pricing") { await prisma.pricingPlan.delete({ where: { id } }); revalidatePublicData(resource); revalidatePath("/"); revalidatePath("/harga"); }
+    else if (resource === "faq") { await prisma.fAQ.delete({ where: { id } }); revalidatePublicData(resource); revalidatePath("/"); }
+    else if (resource === "blog") { await prisma.blogPost.delete({ where: { id } }); revalidatePublicData(resource); revalidatePath("/blog"); }
     return NextResponse.json({ ok: true });
   } catch (error) {
     return NextResponse.json({ message: databaseMessage(error) }, { status: 503 });
