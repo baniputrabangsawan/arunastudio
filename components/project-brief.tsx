@@ -27,7 +27,7 @@ type ProjectBriefProps = {
   contactWhatsapp: string;
 };
 
-const initial: Brief = { name: "", business: "", whatsapp: "", email: "", industry: "", description: "", type: "Company Profile", features: "", goal: "", style: "Warm & profesional", color: "#E76F51", references: "", budget: "Rp900.000–Rp1.400.000", timeline: "1-2 bulan", notes: "" };
+const initial: Brief = { name: "", business: "", whatsapp: "", email: "", industry: "", description: "", type: "Company Profile", features: "", goal: "", style: "Warm & profesional", color: "#FF2334", references: "", budget: "Rp900.000–Rp1.400.000", timeline: "1-2 bulan", notes: "" };
 const steps = ["Identitas", "Tentang bisnis", "Kebutuhan", "Gaya & budget"];
 
 function formatBrief(data: Brief) {

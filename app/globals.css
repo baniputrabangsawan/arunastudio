@@ -2,13 +2,13 @@
 
 :root {
   color-scheme: light;
-  --accent: #e76f51;
-  --accent-dark: #b94f36;
-  --canvas: #f6efe8;
-  --surface: #ede7e0;
-  --paper: #fffaf5;
-  --ink: #2b2b2b;
-  --muted: #625b56;
+  --accent: #ff2334;
+  --accent-dark: #d92234;
+  --canvas: #f1f1ed;
+  --surface: #e7e8e4;
+  --paper: #fafaf7;
+  --ink: #171918;
+  --muted: #5e625f;
   --line: #bfc2bd;
   --success: #315a47;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -147,7 +147,7 @@ button, a, input, textarea, select { touch-action: manipulation; -webkit-tap-hig
 @keyframes reveal { from { transform: translateY(20px); } to { transform: translateY(0); } }
 
 @media (hover: hover) and (pointer: fine) {
-  .button:hover { transform: translateY(-2px); background: #d96347; }
+  .button:hover { transform: translateY(-2px); background: #e91f31; }
   .button.secondary:hover { background: var(--ink); color: var(--paper); }
   .button.light:hover { background: var(--accent); color: var(--ink); }
   .text-link:hover { color: var(--accent-dark); }
