@@ -99,7 +99,12 @@ export function PricingSection({ pricing }: { pricing: PublicPricingPlan[] }) {
                 <p className="mt-5 max-w-sm text-black/65">{plan.note}</p>
               </div>
 
-              <ul className="my-8 grid gap-4 border-t border-black/20 pt-7">
+              <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-black/20 pt-5 text-xs font-bold uppercase tracking-[.08em] text-black/60">
+                <span>{plan.features.length} fitur</span>
+                <span>Revisi: {plan.revision}</span>
+              </div>
+
+              <ul className="my-6 grid gap-4">
                 {plan.features.map((feature) => <li className="flex items-center gap-3 font-semibold" key={feature}><Check size={17} strokeWidth={2.4} aria-hidden="true" />{feature}</li>)}
               </ul>
 

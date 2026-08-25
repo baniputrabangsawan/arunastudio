@@ -15,7 +15,7 @@ export type PublicService = {
   exampleProject: string;
   faqs: ServiceFaq[];
 };
-export type PublicPricingPlan = { slug: string; name: string; price: string; note: string; featured: boolean; features: string[] };
+export type PublicPricingPlan = { slug: string; name: string; price: string; note: string; revision: string; featured: boolean; features: string[] };
 export type PublicFaq = { question: string; answer: string };
 export type PublicPostSummary = { slug: string; title: string; excerpt: string; category: string; date: string; coverUrl: string };
 export type PublicPost = PublicPostSummary & { content: string };
@@ -94,14 +94,38 @@ const services: PublicService[] = [
 ];
 
 const pricing: PublicPricingPlan[] = [
-  { slug: "landing-page", name: "Landing Page", price: "Rp400.000–Rp800.000", note: "Satu halaman untuk menjelaskan penawaran dan mengarahkan pelanggan ke tindakan utama.", features: ["Desain sesuai bisnis", "Mobile responsive", "WhatsApp dan contact form", "SEO dasar"], featured: false },
-  { slug: "company-profile", name: "Company Profile", price: "Rp900.000–Rp1.400.000", note: "Website beberapa halaman untuk bisnis yang membutuhkan profil, layanan, portfolio, dan kontak yang rapi.", features: ["Hingga 6 halaman", "Struktur konten", "Optimasi performa", "SEO on-page"], featured: true },
-  { slug: "custom-website", name: "Custom Website", price: "Mulai Rp2.000.000", note: "Website dengan booking, dashboard, katalog, atau alur khusus yang mengikuti proses bisnis.", features: ["Scope dan alur khusus", "Booking atau katalog", "Dashboard bila diperlukan", "Integrasi API"], featured: false },
+  {
+    slug: "landing-page",
+    name: "Landing Page",
+    price: "Rp400.000–Rp600.000",
+    note: "Satu halaman ringkas untuk menjelaskan penawaran dan mengarahkan pelanggan ke tindakan utama.",
+    features: ["Desain sesuai identitas bisnis", "Mobile responsive", "Hingga 5 section utama", "WhatsApp + contact form", "Google Maps & social media", "SEO dasar + optimasi performa", "Domain + hosting 1 tahun,"],
+    revision: "1× revisi minor",
+    featured: false,
+  },
+  {
+    slug: "company-profile",
+    name: "Company Profile",
+    price: "Rp900.000–Rp1.400.000",
+    note: "Website beberapa halaman untuk bisnis yang membutuhkan profil, layanan, portfolio, dan kontak yang rapi.",
+    features: ["Desain UI sesuai identitas bisnis", "Mobile responsive", "Hingga 6 halaman", "WhatsApp + contact form", "Google Maps & social media", "Galeri / portfolio", "Blog / berita", "CMS sederhana", "SEO on-page", "Google Analytics", "Optimasi performa", "Domain + hosting 1 tahun"],
+    revision: "2× revisi",
+    featured: true,
+  },
+  {
+    slug: "custom-website",
+    name: "Custom Website",
+    price: "Mulai Rp2.000.000",
+    note: "Website dengan booking, dashboard, katalog, atau alur khusus yang mengikuti proses bisnis.",
+    features: ["Desain UI custom", "Mobile responsive", "Hingga 8 halaman", "CMS", "Admin dashboard", "WhatsApp integration", "Contact form", "Booking atau katalog", "Database integration", "Login pengguna bila diperlukan", "Integrasi API sederhana", "SEO on-page", "Google Analytics", "Domain + hosting 1 tahun", "Support setelah launching"],
+    revision: "3× revisi",
+    featured: false,
+  },
 ];
 
 const faqs: PublicFaq[] = [
   { question: "Berapa lama website selesai?", answer: "Landing page umumnya 7–14 hari kerja. Company profile sekitar 2–4 minggu. Waktu final bergantung pada kelengkapan materi dan ruang lingkup." },
-  { question: "Apakah sudah termasuk domain dan hosting?", answer: "Domain dan hosting dapat ditambahkan sesuai kebutuhan. Biayanya ditampilkan terpisah sebelum project dimulai." },
+  { question: "Apakah sudah termasuk domain dan hosting?", answer: "Paket Landing Page, Company Profile, dan Custom Website sudah termasuk domain serta hosting selama 1 tahun." },
   { question: "Apakah website nyaman dibuka di HP?", answer: "Ya. Setiap website dirancang mobile-first, lalu diperiksa kembali pada tablet dan desktop." },
   { question: "Apakah saya bisa mengubah isi website sendiri?", answer: "Bisa jika project mencakup CMS. ARUNA akan menjelaskan bagian yang dapat Anda ubah dan cara mengelolanya." },
   { question: "Apakah website bisa muncul di Google?", answer: "ARUNA menyiapkan metadata, struktur halaman, sitemap, dan fondasi teknis SEO. Peringkat tetap dipengaruhi kompetisi dan kualitas konten." },
