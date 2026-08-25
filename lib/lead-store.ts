@@ -6,7 +6,9 @@ export async function storeLead(id: string, lead: LeadInput) {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) throw new Error("storage_not_configured");
-  const response = await fetch(`${url.replace(/\/$/, "")}/rest/v1/leads`, { method: "POST", headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify({ id, kind: lead.kind, name: lead.name, business: lead.business, whatsapp: lead.whatsapp, email: lead.email, need: lead.need || null, message: lead.message || null, payload: lead.payload || {}, source: lead.source || "website" }), cache: "no-store" });
+  const headers: Record<string, string> = { apikey: key, "Content-Type": "application/json", Prefer: "return=minimal" };
+  if (!key.startsWith("sb_secret_")) headers.Authorization = `Bearer ${key}`;
+  const response = await fetch(`${url.replace(/\/$/, "")}/rest/v1/leads`, { method: "POST", headers, body: JSON.stringify({ id, kind: lead.kind, name: lead.name, business: lead.business, whatsapp: lead.whatsapp, email: lead.email, need: lead.need || null, message: lead.message || null, payload: lead.payload || {}, source: lead.source || "website" }), cache: "no-store" });
   if (!response.ok) throw new Error(`storage_failed_${response.status}`);
 }
 

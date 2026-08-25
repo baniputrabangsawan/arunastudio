@@ -1,17 +1,10 @@
 import Link from "next/link";
-import { ArrowUpRight, AtSign, Github, Instagram, Linkedin, MapPin } from "lucide-react";
+import { ArrowUpRight, AtSign, Github, Instagram, Linkedin } from "lucide-react";
 import { getPublicSettings } from "@/lib/content-data";
+import { navItems } from "@/lib/data";
 import styles from "./footer.module.css";
 
 const services = ["Website Bisnis", "Sistem Bisnis", "SEO & Pertumbuhan", "Otomasi"];
-
-const footerLinks = [
-  { href: "/", label: "Beranda" },
-  { href: "/layanan", label: "Layanan" },
-  { href: "/portfolio", label: "Portfolio" },
-  { href: "/harga", label: "Harga" },
-  { href: "/kontak", label: "Kontak" },
-];
 
 function ServiceMarqueeGroup({ hidden = false }: { hidden?: boolean }) {
   return (
@@ -53,11 +46,6 @@ export async function Footer() {
             <Link className="button light" href="/mulai-project">
               Mulai project <ArrowUpRight size={18} aria-hidden="true" />
             </Link>
-            {settings.email && (
-              <a className={styles.textLink} href={`mailto:${settings.email}`}>
-                {settings.email}
-              </a>
-            )}
           </div>
         </div>
 
@@ -65,7 +53,7 @@ export async function Footer() {
           <nav aria-label="Navigasi footer">
             <p className={styles.label}>Jelajahi</p>
             <div className={styles.navLinks}>
-              {footerLinks.map((item) => (
+              {navItems.map((item) => (
                 <Link className={styles.navLink} href={item.href} key={item.href}>
                   {item.label}
                 </Link>
@@ -83,13 +71,6 @@ export async function Footer() {
               ))}
             </div>
           </div>
-
-          {settings.location && (
-            <p className={styles.location}>
-              <MapPin size={17} aria-hidden="true" />
-              {settings.location}
-            </p>
-          )}
         </div>
       </div>
 

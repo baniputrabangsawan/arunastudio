@@ -101,7 +101,6 @@
   margin-top: clamp(32px, 4vw, 48px);
 }
 
-.textLink,
 .navLink {
   position: relative;
   width: fit-content;
@@ -109,7 +108,6 @@
   font-weight: 750;
 }
 
-.textLink::after,
 .navLink::after {
   position: absolute;
   right: 0;
@@ -156,15 +154,6 @@
     border-color var(--duration-default) var(--ease-out),
     background-color var(--duration-default) var(--ease-out),
     color var(--duration-default) var(--ease-out);
-}
-
-.location {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin: 0;
-  color: color-mix(in srgb, var(--ink) 65%, transparent);
-  font-size: 0.9rem;
 }
 
 .bottom {
@@ -216,10 +205,6 @@
   .actions > :global(.button) {
     width: 100%;
   }
-
-  .textLink {
-    overflow-wrap: anywhere;
-  }
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -227,7 +212,6 @@
     animation-play-state: paused;
   }
 
-  .textLink:hover::after,
   .navLink:hover::after {
     transform: scaleX(1);
     transform-origin: left;
