@@ -8,6 +8,8 @@ import { SiteShell } from "@/components/site-shell";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { WhatsAppButton } from "@/components/whatsapp-button";
+import { ArunaAiAssistant } from "@/components/aruna-ai-assistant";
+import { getPublishedFaqs, getPublishedServices } from "@/lib/content-data";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -22,11 +24,14 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const [faqs, services] = await Promise.all([getPublishedFaqs(), getPublishedServices()]);
+  const assistantFaqs = [...faqs, ...services.flatMap((service) => service.faqs)];
+
   return (
     <html lang="id-ID">
       <body suppressHydrationWarning>
-        <SiteShell header={<Header />} footer={<Footer />} whatsapp={<WhatsAppButton />}>
+        <SiteShell assistant={<ArunaAiAssistant faqs={assistantFaqs} />} header={<Header />} footer={<Footer />} whatsapp={<WhatsAppButton />}>
           {children}
         </SiteShell>
       </body>
