@@ -70,7 +70,7 @@ const coreKnowledge: KnowledgeItem[] = [
   },
   {
     question: "Berapa harga pembuatan website?",
-    answer: "Landing page mulai Rp400.000–Rp800.000, company profile Rp900.000–Rp1.400.000, dan website custom mulai Rp2.000.000. Biaya final mengikuti scope yang disepakati.",
+    answer: "Landing page mulai Rp400.000–Rp600.000, company profile Rp900.000–Rp1.400.000, dan website custom mulai Rp2.000.000. Biaya final mengikuti scope yang disepakati.",
     keywords: ["harga", "biaya", "budget", "tarif", "investasi"],
   },
   {

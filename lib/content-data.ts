@@ -99,7 +99,7 @@ const pricing: PublicPricingPlan[] = [
     name: "Landing Page",
     price: "Rp400.000–Rp600.000",
     note: "Satu halaman ringkas untuk menjelaskan penawaran dan mengarahkan pelanggan ke tindakan utama.",
-    features: ["Desain sesuai identitas bisnis", "Mobile responsive", "Hingga 5 section utama", "WhatsApp + contact form", "Google Maps & social media", "SEO dasar + optimasi performa", "Domain + hosting 1 tahun,"],
+    features: ["Desain sesuai identitas bisnis", "Mobile responsive", "Hingga 5 section utama", "WhatsApp + contact form", "Google Maps & social media", "SEO dasar + optimasi performa", "Domain + hosting 1 tahun"],
     revision: "1× revisi minor",
     featured: false,
   },
