@@ -1,54 +1,103 @@
 import Link from "next/link";
-import { ArrowUpRight, AtSign, Github, Instagram, Linkedin, Mail, MapPin } from "lucide-react";
+import { ArrowUpRight, AtSign, Github, Instagram, Linkedin, MapPin } from "lucide-react";
 import { getPublicSettings } from "@/lib/content-data";
+import styles from "./footer.module.css";
+
+const services = ["Website Bisnis", "Sistem Bisnis", "SEO & Pertumbuhan", "Otomasi"];
+
+const footerLinks = [
+  { href: "/", label: "Beranda" },
+  { href: "/layanan", label: "Layanan" },
+  { href: "/portfolio", label: "Portfolio" },
+  { href: "/harga", label: "Harga" },
+  { href: "/kontak", label: "Kontak" },
+];
+
+function ServiceMarqueeGroup({ hidden = false }: { hidden?: boolean }) {
+  return (
+    <ul className={styles.marqueeGroup} aria-hidden={hidden || undefined}>
+      {services.map((service) => (
+        <li className={styles.marqueeItem} key={service}>
+          <span>{service}</span>
+          <span className={styles.spark} aria-hidden="true">✦</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export async function Footer() {
   const settings = await getPublicSettings();
-  const { email, location } = settings;
   const socials = [
     { label: "GitHub", href: settings.githubUrl, Icon: Github },
     { label: "LinkedIn", href: settings.linkedinUrl, Icon: Linkedin },
     { label: "Instagram", href: settings.instagramUrl, Icon: Instagram },
     { label: "Threads", href: settings.threadsUrl, Icon: AtSign },
-  ];
+  ].filter(({ href }) => href);
 
   return (
-    <footer className="border-t border-black/20 bg-[var(--accent)] px-0 pb-8 pt-20 text-[var(--ink)]">
-      <div className="container">
-        <div className="grid gap-12 border-b border-white/15 pb-16 md:grid-cols-[1.4fr_.6fr_.8fr]">
-          <div>
-            <h2 className="max-w-2xl text-5xl font-bold leading-[.98] tracking-[-.055em] md:text-7xl">Pelanggan berikutnya perlu menemukan Anda.</h2>
-            <Link href="/mulai-project" className="button light mt-8">Mulai Project <ArrowUpRight size={18} aria-hidden="true" /></Link>
+    <footer className={styles.footer}>
+      <div className={styles.marquee} aria-label="Layanan utama ARUNA">
+        <div className={styles.marqueeTrack}>
+          <ServiceMarqueeGroup />
+          <ServiceMarqueeGroup hidden />
+        </div>
+      </div>
+
+      <div className={`container ${styles.main}`}>
+        <div className={styles.cta}>
+          <p className={styles.kicker}>Project berikutnya</p>
+          <h2>Siap membuat bisnis Anda lebih meyakinkan?</h2>
+          <p className={styles.ctaDescription}>Ceritakan bisnis dan kebutuhan Anda. ARUNA akan membantu menentukan halaman, fitur, dan kisaran investasi yang masuk akal.</p>
+          <div className={styles.actions}>
+            <Link className="button light" href="/mulai-project">
+              Mulai project <ArrowUpRight size={18} aria-hidden="true" />
+            </Link>
+            {settings.email && (
+              <a className={styles.textLink} href={`mailto:${settings.email}`}>
+                {settings.email}
+              </a>
+            )}
           </div>
-          <div>
-            <p className="mb-4 text-sm text-black/55">Jelajahi</p>
-            <div className="grid gap-3 font-bold">
-              <Link href="/layanan">Layanan</Link>
-              <Link href="/portfolio">Portfolio</Link>
-              <Link href="/harga">Harga</Link>
-              <Link href="/blog">Journal</Link>
-              <Link href="/kontak">Konsultasi singkat</Link>
+        </div>
+
+        <div className={styles.directory}>
+          <nav aria-label="Navigasi footer">
+            <p className={styles.label}>Jelajahi</p>
+            <div className={styles.navLinks}>
+              {footerLinks.map((item) => (
+                <Link className={styles.navLink} href={item.href} key={item.href}>
+                  {item.label}
+                </Link>
+              ))}
             </div>
-          </div>
+          </nav>
+
           <div>
-            <p className="mb-4 text-sm text-black/55">Hubungi</p>
-            <div className="grid gap-3 font-bold">
-              {location && <p className="flex items-start gap-2"><MapPin className="mt-0.5 shrink-0" size={18} aria-hidden="true" />{location}</p>}
-              {email && <a className="flex items-start gap-2 break-all" href={`mailto:${email}`}><Mail className="mt-0.5 shrink-0" size={18} aria-hidden="true" />{email}</a>}
-              <Link href="/mulai-project">Project brief</Link>
-            </div>
-            <div className="mt-6 flex flex-wrap gap-2" aria-label="Media sosial ARUNA">
-              {socials.filter(({ href }) => href).map(({ label, href, Icon }) => (
-                <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} title={label} className="social-link grid size-11 place-items-center border border-black/35">
+            <p className={styles.label}>Terhubung</p>
+            <div className={styles.socials} aria-label="Media sosial ARUNA">
+              {socials.map(({ label, href, Icon }) => (
+                <a className={styles.socialLink} href={href} key={label} target="_blank" rel="noreferrer" aria-label={label} title={label}>
                   <Icon size={19} aria-hidden="true" />
                 </a>
               ))}
             </div>
           </div>
+
+          {settings.location && (
+            <p className={styles.location}>
+              <MapPin size={17} aria-hidden="true" />
+              {settings.location}
+            </p>
+          )}
         </div>
-        <div className="flex flex-col gap-4 pt-7 text-sm text-black/60 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} ARUNA. Website untuk bisnis Indonesia.</p>
-          <div className="flex gap-5"><Link href="/privacy">Privasi</Link><Link href="/terms">Ketentuan</Link></div>
+      </div>
+
+      <div className={`container ${styles.bottom}`}>
+        <p>© {new Date().getFullYear()} ARUNA. Website untuk bisnis Indonesia.</p>
+        <div className={styles.legal}>
+          <Link className={styles.navLink} href="/privacy">Privasi</Link>
+          <Link className={styles.navLink} href="/terms">Ketentuan</Link>
         </div>
       </div>
     </footer>

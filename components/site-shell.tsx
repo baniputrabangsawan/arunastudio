@@ -1,3 +1,6 @@
+import { ParallaxProvider } from "@/components/parallax-provider";
+import { SmoothScrollProvider } from "@/components/smooth-scroll-provider";
+
 type SiteShellProps = {
   children: React.ReactNode;
   header: React.ReactNode;
@@ -7,11 +10,11 @@ type SiteShellProps = {
 
 export function SiteShell({ children, header, footer, whatsapp }: SiteShellProps) {
   return (
-    <>
+    <SmoothScrollProvider>
       {header}
-      <div id="main-content" tabIndex={-1}>{children}</div>
+      <ParallaxProvider>{children}</ParallaxProvider>
       {whatsapp}
       {footer}
-    </>
+    </SmoothScrollProvider>
   );
 }

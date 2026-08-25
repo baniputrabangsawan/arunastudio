@@ -22,7 +22,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; scroll-padding-top: 72px; }
 body {
   margin: 0;
   background: var(--canvas);

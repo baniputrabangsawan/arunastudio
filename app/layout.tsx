@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@fontsource-variable/plus-jakarta-sans";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 import arunaLogo from "@/aruna1.svg";
 import { siteUrl } from "@/lib/utils";
