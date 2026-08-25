@@ -13,6 +13,10 @@ type ProjectBriefProps = {
 const initial: ProjectBriefData = { name: "", business: "", whatsapp: "", email: "", industry: "", description: "", type: "Company Profile", features: "", goal: "", style: "Warm & profesional", color: "#FF2334", references: "", budget: "Rp900.000–Rp1.400.000", timeline: "1-2 bulan", notes: "" };
 const steps = ["Identitas", "Tentang bisnis", "Kebutuhan", "Gaya & budget", "Periksa brief"];
 const maximumLengths: Partial<Record<keyof ProjectBriefData, number>> = { name: 100, business: 120, whatsapp: 20, email: 160, industry: 120, description: 1000, features: 500, goal: 500, style: 120, references: 300, notes: 1000 };
+const submissionStorageKey = "aruna-brief-submitted-at";
+const activeSubmissionKey = "aruna-brief-submit-lock";
+const deviceCooldownMs = 24 * 60 * 60 * 1000;
+const activeSubmissionMs = 2 * 60 * 1000;
 
 function formatBrief(data: ProjectBriefData) {
   return [
@@ -43,10 +47,14 @@ export function ProjectBrief({ contactEmail, contactWhatsapp }: ProjectBriefProp
   const [done, setDone] = useState<{ message: string; id?: string; whatsapp?: string } | null>(null);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<ProjectBriefErrors>({});
+  const [cooldownUntil, setCooldownUntil] = useState<number | null>(null);
 
   useEffect(() => {
     const handle = window.setTimeout(() => {
       try {
+        const submittedAt = Number(localStorage.getItem(submissionStorageKey) || 0);
+        if (submittedAt > 0 && submittedAt + deviceCooldownMs > Date.now()) setCooldownUntil(submittedAt + deviceCooldownMs);
+        else localStorage.removeItem(submissionStorageKey);
         const saved = localStorage.getItem("aruna-brief");
         const stored = saved ? { ...initial, ...JSON.parse(saved) } : initial;
         const params = new URLSearchParams(location.search);
@@ -126,14 +134,31 @@ export function ProjectBrief({ contactEmail, contactWhatsapp }: ProjectBriefProp
     setBusy(true);
     setError("");
 
+    const activeSubmissionAt = Number(localStorage.getItem(activeSubmissionKey) || 0);
+    if (activeSubmissionAt > 0 && Date.now() - activeSubmissionAt < activeSubmissionMs) {
+      setBusy(false);
+      setError("Project Brief sedang dikirim dari perangkat ini. Tunggu proses sebelumnya selesai.");
+      return;
+    }
+    localStorage.setItem(activeSubmissionKey, String(Date.now()));
+
     const message = formatBrief(data);
     const whatsappTarget = whatsappUrl(contactWhatsapp, message);
     try {
       const response = await fetch("/api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ kind: "project_brief", name: data.name, business: data.business, whatsapp: data.whatsapp, email: data.email, need: data.type, message: data.goal, payload: data, source: "project_brief" }) });
       const result = await response.json();
+      if (!response.ok && result.code === "device_cooldown") {
+        const availableAt = Number(result.availableAt) || Date.now() + deviceCooldownMs;
+        localStorage.setItem(submissionStorageKey, String(availableAt - deviceCooldownMs));
+        setCooldownUntil(availableAt);
+        setError(result.error);
+        return;
+      }
       if (!response.ok) throw new Error(result.error);
       const withId = `${message}\n\nID submission: ${result.submissionId}`;
       localStorage.removeItem("aruna-brief");
+      localStorage.setItem(submissionStorageKey, String(Date.now()));
+      setCooldownUntil(Date.now() + deviceCooldownMs);
       setDone({ message: "Brief tersimpan dan siap ditindaklanjuti.", id: result.submissionId, whatsapp: whatsappUrl(contactWhatsapp, withId) });
     } catch (cause) {
       if (whatsappTarget) setDone({ message: `${cause instanceof Error ? cause.message : "Brief belum dapat disimpan."} Jawaban Anda tetap tersimpan. Kirim ringkasannya melalui WhatsApp sebagai alternatif.`, whatsapp: whatsappTarget });
@@ -143,6 +168,7 @@ export function ProjectBrief({ contactEmail, contactWhatsapp }: ProjectBriefProp
         setError(`${cause instanceof Error ? cause.message : "Penyimpanan server belum tersedia."} Draft tetap tersimpan di perangkat ini.`);
       }
     } finally {
+      localStorage.removeItem(activeSubmissionKey);
       setBusy(false);
     }
   }
@@ -153,6 +179,14 @@ export function ProjectBrief({ contactEmail, contactWhatsapp }: ProjectBriefProp
     { title: "Kebutuhan", targetStep: 2, items: [["Jenis website", data.type], ["Fitur", data.features || "Perlu diskusi"], ["Tujuan", data.goal]] },
     { title: "Gaya & budget", targetStep: 3, items: [["Gaya", data.style || "Perlu diskusi"], ["Referensi", data.references || "Belum ada"], ["Budget", data.budget], ["Target launch", data.timeline], ["Catatan", data.notes || "Tidak ada"]] },
   ];
+
+  if (cooldownUntil && cooldownUntil > Date.now() && !done) return (
+    <div className="border border-[#345348]/30 bg-white p-8 text-center md:p-14" role="status">
+      <CheckCircle2 className="mx-auto text-[#345348]" size={52} />
+      <h2 className="mt-5 text-4xl font-black">Brief sudah dikirim.</h2>
+      <p className="mx-auto mt-3 max-w-xl text-[var(--muted)]">Perangkat ini dapat mengirim Project Brief kembali setelah {new Intl.DateTimeFormat("id-ID", { dateStyle: "long", timeStyle: "short" }).format(cooldownUntil)}.</p>
+    </div>
+  );
 
   if (done) return (
     <div className="border border-[#345348]/30 bg-white p-8 text-center md:p-14" role="status">
